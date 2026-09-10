@@ -105,18 +105,47 @@ body {
 .hero-mountains .sun  { fill: var(--sun); }
 .hero-mountains .snow { fill: var(--pine); opacity: .9; }
 
-.hero-eyebrow {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: .28em;
+/* タイトル下の英字。数字だけオーカーで大きくして情報として立たせる */
+.hero-en,
+.list-en {
+  font-family: "Outfit", "Zen Maru Gothic", sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: .24em;
   color: var(--fjord);
-  margin-bottom: 4px;
+  margin-top: -6px;
+  margin-bottom: 18px;
 }
+.hero-en b,
+.list-en b {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--sun);
+  margin-right: 2px;
+}
+.list-en { margin-top: 6px; margin-bottom: 8px; }
 .hero-title {
   font-size: 34px;
   font-weight: 900;
   letter-spacing: .04em;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
+}
+.hero-title .beta {
+  display: inline-block;
+  vertical-align: 12px;
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: var(--sun);
+  background: #FBF1DE;
+  border: 1.5px solid #EBD5A8;
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+@media (max-width: 380px) {
+  .hero-title .beta { vertical-align: 10px; font-size: 11px; padding: 2px 8px; }
 }
 .hero-lead {
   font-size: 14.5px;
@@ -339,11 +368,6 @@ body {
   box-shadow: var(--shadow-card);
 }
 
-.result-name {
-  font-size: 25px;
-  font-weight: 900;
-  margin-bottom: 10px;
-}
 .result-desc {
   font-size: 14.5px;
   color: #45564e;
@@ -480,7 +504,14 @@ body {
 
 .result-char { margin: 2px 0 6px; }
 .result-animal {
-  font-size: 13.5px;
+  font-size: 27px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+.result-name {
+  font-size: 14px;
   font-weight: 700;
   color: var(--stone);
   margin-bottom: 12px;
@@ -509,8 +540,9 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
-  margin-bottom: 24px;
 }
+#cast-top { margin-bottom: 22px; }
+#cast-bottom { margin-top: 30px; }
 .cast-group {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -548,32 +580,107 @@ body {
 .legend p + p { margin-top: 8px; }
 .legend b { color: var(--pine); }
 
-/* ---- 目次 ---- */
-.type-nav {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-  gap: 8px;
-  margin-bottom: 30px;
-}
-.type-nav a {
+/* ---- 入口：4グループのカード ---- */
+.group-cards { display: grid; gap: 12px; margin-bottom: 8px; }
+.gcard {
+  position: relative;
   display: block;
-  text-align: center;
+  border-radius: 20px;
+  padding: 16px 16px 14px;
   text-decoration: none;
-  background: var(--paper);
-  border-radius: 13px;
-  padding: 7px 4px 6px;
-  box-shadow: var(--shadow-card);
+  color: inherit;
+  overflow: hidden;
 }
-.type-nav a:hover { background: #FBFCFB; }
-.type-nav a:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
-.nav-char { width: 100%; max-width: 58px; margin: 0 auto 2px; }
-.type-nav span {
-  display: block;
-  font-size: 10.5px;
+.gcard:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+.gcard-bg {
+  position: absolute;
+  right: 10px;
+  top: -6px;
+  font-size: 64px;
   font-weight: 900;
-  letter-spacing: .1em;
-  color: var(--pine);
+  letter-spacing: .04em;
+  opacity: .13;
+  line-height: 1;
+  pointer-events: none;
+  white-space: nowrap;
 }
+.gcard-head {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.gcard-name { font-size: 21px; font-weight: 900; letter-spacing: .04em; }
+.gcard-lead { font-size: 13px; font-weight: 700; color: #3d4d46; }
+.gcard-chars {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  margin: 10px 0 8px;
+}
+.gcard-chars svg { width: 100%; height: auto; display: block; }
+.gcard-foot {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--stone);
+}
+.gcard-code { font-family: "Outfit", var(--font); font-weight: 700; letter-spacing: .08em; }
+
+/* ---- 詳細：切り替えタブ ---- */
+.group-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 18px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--birch);
+  padding: 8px 0;
+}
+.gtab {
+  font-family: inherit;
+  border: 1.5px solid var(--line);
+  background: var(--paper);
+  color: var(--stone);
+  border-radius: 14px;
+  padding: 7px 2px 6px;
+  cursor: pointer;
+  display: block;
+}
+.gtab.on { border-color: transparent; font-weight: 900; }
+.gtab:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+.gtab-char { width: 100%; max-width: 42px; margin: 0 auto 1px; display: block; }
+.gtab-name { font-size: 11.5px; font-weight: 700; display: block; }
+
+/* ---- 詳細：グループの大見出し ---- */
+.group-hero {
+  position: relative;
+  border-radius: 20px;
+  padding: 20px 18px 18px;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+.gh-bg {
+  position: absolute;
+  right: 8px;
+  top: -10px;
+  font-size: 82px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  opacity: .14;
+  line-height: 1;
+  white-space: nowrap;
+}
+.gh-name { position: relative; font-size: 26px; font-weight: 900; letter-spacing: .05em; }
+.gh-lead { position: relative; font-size: 14px; font-weight: 700; color: #3d4d46; margin-top: 3px; }
+.gh-axis { position: relative; font-size: 11.5px; color: var(--stone); margin-top: 7px; }
 
 /* ---- 各タイプ ---- */
 .type-item {
@@ -597,8 +704,8 @@ body {
   border-radius: 5px;
   padding: 2px 9px;
 }
-.ti-name { font-size: 19px; font-weight: 900; margin-top: 6px; line-height: 1.4; }
-.tc-animal { font-size: 12px; font-weight: 700; color: var(--stone); margin-top: 2px; }
+.ti-name { font-size: 21px; font-weight: 900; margin-top: 6px; line-height: 1.35; }
+.tc-type { font-size: 12.5px; font-weight: 700; color: var(--stone); margin-top: 3px; }
 .tc-copy { font-size: 13.5px; font-weight: 700; color: var(--fjord); margin-top: 6px; line-height: 1.6; }
 
 /* 4軸の内訳 */
@@ -655,7 +762,9 @@ body {
 .type-item .match-label,
 .type-item .match-name,
 .type-item .match-why { display: block; }
-.type-item .match-name { margin: 3px 0; font-size: 15px; }
+.type-item .match-name { margin: 3px 0 1px; font-size: 15px; }
+.match-type { font-size: 11.5px; font-weight: 700; color: var(--stone); }
+.type-item .match-type { display: block; margin-bottom: 2px; }
 .type-item .match-code { margin-right: 8px; }
 
 .list-foot { text-align: center; margin-top: 32px; }
@@ -670,3 +779,75 @@ body {
 }
 .match-link:hover { border-bottom-color: var(--fjord); }
 .match-link:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+
+/* =========================================================
+   紹介ページ：4軸の解説（左右対比）
+   ========================================================= */
+.axis-table { margin-top: 16px; }
+.ax-item { padding: 14px 0; border-top: 1px solid var(--line); }
+.ax-item:first-child { border-top: none; padding-top: 4px; }
+
+.ax-head { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+.ax-pos {
+  font-family: "Outfit", var(--font);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: var(--stone);
+  background: #F0F3F1;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.ax-name { font-size: 13.5px; font-weight: 900; }
+
+.ax-pair { display: flex; align-items: stretch; gap: 9px; }
+.ax-side {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  border-radius: 12px;
+  padding: 9px 6px 8px;
+}
+.ax-side.l { background: #EAF0EC; }
+.ax-side.r { background: #EAF0F5; }
+.ax-ltr {
+  font-family: "Outfit", var(--font);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-block;
+  border-radius: 6px;
+  padding: 4px 9px;
+  color: #fff;
+}
+.ax-side.l .ax-ltr { background: var(--pine); }
+.ax-side.r .ax-ltr { background: var(--fjord); }
+.ax-word { font-size: 12.5px; font-weight: 700; margin-top: 6px; line-height: 1.4; }
+.ax-side.l .ax-word { color: var(--pine); }
+.ax-side.r .ax-word { color: #2E4B60; }
+.ax-vs { align-self: center; font-size: 10.5px; color: #C3CFC8; font-weight: 700; }
+
+.ax-bar { display: flex; height: 5px; border-radius: 999px; overflow: hidden; margin-top: 9px; }
+.ax-bar i { flex: 1; }
+.ax-bar i:first-child { background: var(--pine); }
+.ax-bar i:last-child { background: var(--fjord); }
+.ax-memo { font-size: 12px; color: var(--stone); margin-top: 8px; line-height: 1.7; text-align: center; }
+
+.group-table { display: grid; gap: 8px; margin-top: 12px; }
+.gr-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 13px;
+  border-radius: 13px;
+  text-decoration: none;
+  color: inherit;
+}
+.gr-row:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+.gr-mark { width: 8px; height: 34px; border-radius: 999px; flex-shrink: 0; }
+.gr-body { display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px 9px; }
+.gr-name { font-size: 15px; font-weight: 900; }
+.gr-lead { font-size: 12.5px; color: #3d4d46; }
+.gr-axis { font-size: 11.5px; color: var(--stone); flex-basis: 100%; }
+
+.legend-plain { margin-bottom: 14px; }

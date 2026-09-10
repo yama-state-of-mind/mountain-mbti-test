@@ -45,20 +45,25 @@ function showScreen(name) {
 
 
 /* ---------- スタート画面のキャラクター配置 ----------
-   4グループごとに帯を作り、それぞれの淡色を敷く。
-   上2つが高山（孤峰・稜線）、下2つが森（静林・陽だまり） */
+   山のイラストの上に孤峰・稜線（高山）、ページ下部に静林・陽だまり（森）。
+   グループごとに帯を作り、それぞれの淡色を敷く */
 function renderCast() {
-  const box = document.getElementById("cast");
-  if (!box || typeof characterSVG !== "function") return;
+  if (typeof characterSVG !== "function") return;
   const codes = Object.keys(TYPES);
 
-  box.innerHTML = ["PS", "PG", "ES", "EG"].map((key) => {
-    const g = GROUPS[key];
-    const list = codes.filter((c) => c.slice(0, 2) === key);
-    return `<div class="cast-group" style="background:${g.band}">
-      ${list.map((c) => characterSVG(c, "char")).join("")}
-    </div>`;
-  }).join("");
+  const fill = (id, keys) => {
+    const box = document.getElementById(id);
+    if (!box) return;
+    box.innerHTML = keys.map((key) => {
+      const g = GROUPS[key];
+      const list = codes.filter((c) => c.slice(0, 2) === key);
+      return `<div class="cast-group" style="background:${g.band}">
+        ${list.map((c) => characterSVG(c, "char")).join("")}
+      </div>`;
+    }).join("");
+  };
+  fill("cast-top", ["PS", "PG"]);
+  fill("cast-bottom", ["ES", "EG"]);
 }
 renderCast();
 
@@ -275,8 +280,8 @@ function showResult() {
   plate.style.background = g.deep;
   const ch = CHARACTERS[code];
   $("#result-char").innerHTML = characterSVG(code, "char char-lg");
+  $("#result-animal").textContent = ch ? ch.animal : type.name;
   $("#result-name").textContent = type.name;
-  $("#result-animal").textContent = ch ? `（${ch.animal}）` : "";
   $("#result-copy").textContent = "「" + type.copy + "」";
   $("#result-features").textContent = type.features;
   $("#result-caution").textContent = type.caution;
@@ -284,6 +289,7 @@ function showResult() {
   $("#result-match").innerHTML = findMatches(code)
     .map((m) => {
       const t = TYPES[m.code] || { name: "—" };
+      const mc = CHARACTERS[m.code];
       return `
       <div class="match">
         <a class="match-char" href="types.html#${m.code}" aria-label="${t.name}の紹介を見る">
@@ -293,8 +299,9 @@ function showResult() {
           <p class="match-label">${m.label}</p>
           <p class="match-name">
             <span class="match-code" style="background:${groupOf(m.code).deep}">${m.code}</span>
-            <a class="match-link" href="types.html#${m.code}">${t.name}</a>
+            <a class="match-link" href="types.html#${m.code}">${mc ? mc.animal : t.name}</a>
           </p>
+          <p class="match-type">${t.name}</p>
           <p class="match-why">${m.why}</p>
         </div>
       </div>`;

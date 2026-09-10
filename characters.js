@@ -346,10 +346,14 @@ EGFA: { animal: "ノウサギ", item: "自撮り棒つきスマホ", svg: `
    circle: キャラクターの背景円（bandより一段淡い）
    deep  : コードのプレート色（白抜き文字）*/
 const GROUPS = {
-  PS: { name: "孤峰",     lead: "ひとりで高みへ", band: "#E9EEF1", circle: "#F0F4F6", deep: "#3E5C6E" },
-  PG: { name: "稜線",     lead: "仲間と高みへ",   band: "#F5EAE6", circle: "#F9F0ED", deep: "#B5533A" },
-  ES: { name: "静林",     lead: "ひとりで森を",   band: "#E9F0EA", circle: "#F0F5F1", deep: "#4E7A57" },
-  EG: { name: "陽だまり", lead: "仲間と森を",     band: "#F6EFE2", circle: "#FAF4EA", deep: "#A5761F" },
+  PS: { name: "孤峰",     lead: "ひとりで高みへ", axis: "ピークハント × ソロ",
+        band: "#E3EBF0", circle: "#E3EDF3", deep: "#3E5C6E" },
+  PG: { name: "稜線",     lead: "仲間と高みへ",   axis: "ピークハント × グループ",
+        band: "#F3E6E1", circle: "#F5E7E1", deep: "#B5533A" },
+  ES: { name: "静林",     lead: "ひとりで森を",   axis: "エンジョイ × ソロ",
+        band: "#E2ECE4", circle: "#E1EDE5", deep: "#4E7A57" },
+  EG: { name: "陽だまり", lead: "仲間と森を",     axis: "エンジョイ × グループ",
+        band: "#F4EBDB", circle: "#F6EDDC", deep: "#A5761F" },
 };
 
 /* コードからグループを引く（PSLC → PS） */
