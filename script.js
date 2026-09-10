@@ -51,18 +51,27 @@ function renderCast() {
   if (typeof characterSVG !== "function") return;
   const codes = Object.keys(TYPES);
 
+  let base = 0;
   const fill = (id, keys) => {
     const box = document.getElementById(id);
     if (!box) return;
-    box.innerHTML = keys.map((key) => {
+    box.innerHTML = keys.map((key, gi) => {
       const g = GROUPS[key];
       const list = codes.filter((c) => c.slice(0, 2) === key);
       return `<div class="cast-group" style="background:${g.band}">
-        ${list.map((c) => characterSVG(c, "char")).join("")}
+        ${list.map((c, i) => {
+          // 帯ごと・1体ごとに少しずつ遅らせて、順番に現れるようにする
+          const n = base + gi * 4 + i;
+          const delay = n * 0.055;              // 順番に現れるための遅れ
+          const cycle = 4.6 + (n % 5) * 0.36;   // 1体ずつ周期を変えて動きを揃えない
+          return characterSVG(c, "char").replace(
+            "<svg ", `<svg style="--d:${delay.toFixed(2)}s;--fd:${cycle.toFixed(2)}s" `);
+        }).join("")}
       </div>`;
     }).join("");
   };
   fill("cast-top", ["PS", "PG"]);
+  base = 8;
   fill("cast-bottom", ["ES", "EG"]);
 }
 renderCast();
