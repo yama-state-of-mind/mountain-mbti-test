@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>16タイプ一覧｜登山タイプ診断</title>
+<meta name="description" content="登山タイプ診断の16タイプを、山の生き物のキャラクターと一緒に紹介します。">
+<meta name="theme-color" content="#1E3A31">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="list-page">
+
+  <header class="list-head">
+    <h1>16タイプ一覧</h1>
+    <p>それぞれのタイプに、山の生き物のキャラクターがいます。</p>
+  </header>
+
+  <section class="legend">
+    <h2>キャラクターの読み方</h2>
+    <p><b>生き物</b>は、その人が山とどう関わるかを表しています。カモシカやライチョウのような<b>高山の生き物</b>は山頂を目指すピークハント派、タヌキやリスのような<b>森の生き物</b>は過程を楽しむエンジョイ派です。背景の色は、この2つの軸の組み合わせで4通りに分かれています。</p>
+    <p>さらに、イヌワシやキツネのような<b>単独で暮らす生き物</b>はソロ派、ニホンザルやシカのような<b>群れで暮らす生き物</b>はグループ派になります。</p>
+    <p><b>持ちもの</b>は、その人の判断のしかたを表しています。地形図・ホイッスル・カメラのような<b>道具や情報</b>を持っているのは計画・データ派、マグカップ・花・バンダナのような<b>嗜好品や身につけるもの</b>を持っているのは感覚・フィーリング派です。</p>
+  </section>
+
+  <nav class="type-nav" id="type-nav" aria-label="タイプの目次"><!-- JSが生成 --></nav>
+
+  <div class="type-list" id="type-list"><!-- JSが16タイプを生成 --></div>
+
+  <p class="list-foot hero-link"><a href="index.html">診断をはじめる</a></p>
+
+</div>
+
+<script src="data.js"></script>
+<script src="characters.js"></script>
+<script>
+/* data.js の TYPES と characters.js の CHARACTERS を突き合わせて一覧を作る。
+   タイプを増やしたときも、この2ファイルを直すだけで一覧に反映されます。 */
+/* 相性のいいタイプ（結果画面と同じルール） */
+function flipAxis(code, axisIndex) {
+  const ax = AXES[axisIndex];
+  const chars = code.split("");
+  chars[axisIndex] = chars[axisIndex] === ax.a ? ax.b : ax.a;
+  return chars.join("");
+}
+function findMatches(code) {
+  return [
+    { label: "息が合う相手", code: flipAxis(code, 2), why: "計画の立て方が逆どうし。抜けを補い合えます" },
+    { label: "刺激をくれる相手", code: flipAxis(code, 0), why: "登り方は近いのに、山に求めるものが違います" },
+  ];
+}
+
+document.getElementById("type-nav").innerHTML = Object.keys(TYPES).map((code) => {
+  const g = groupOf(code);
+  return `<a href="#${code}" style="background:${g.band}">
+    ${characterSVG(code, "char nav-char")}<span style="color:${g.deep}">${code}</span></a>`;
+}).join("");
+
+document.getElementById("type-list").innerHTML = Object.keys(TYPES).map((code) => {
+  const t = TYPES[code];
+  const c = CHARACTERS[code] || { animal: "", item: "" };
+  const g = groupOf(code);
+  const axisText = code.split("").map((ch, i) => {
+    const ax = AXES[i];
+    return `<span class="ax"><b>${ch}</b>${ch === ax.a ? ax.aName : ax.bName}</span>`;
+  }).join("");
+
+  const matches = findMatches(code).map((m) => {
+    const mt = TYPES[m.code];
+    if (!mt) return "";
+    return `
+      <a class="match" href="#${m.code}" style="background:${groupOf(m.code).band}">
+        ${characterSVG(m.code, "char char-sm")}
+        <span class="match-body">
+          <span class="match-label">${m.label}</span>
+          <span class="match-name"><span class="match-code" style="background:${groupOf(m.code).deep}">${m.code}</span>${mt.name}</span>
+          <span class="match-why">${m.why}</span>
+        </span>
+      </a>`;
+  }).join("");
+
+  return `
+    <article class="type-item" id="${code}">
+      <header class="ti-head">
+        ${characterSVG(code, "char ti-char")}
+        <div class="ti-title">
+          <span class="tc-code" style="background:${g.deep}">${code}</span>
+          <h2 class="ti-name">${t.name}</h2>
+          <p class="tc-animal">（${c.animal}）</p>
+          <p class="tc-copy">「${t.copy}」</p>
+        </div>
+      </header>
+
+      <div class="ti-axes">${axisText}</div>
+
+      <section class="ti-block">
+        <h3 class="ti-label">特徴</h3>
+        <p class="ti-text">${t.features}</p>
+      </section>
+
+      <section class="ti-block ti-caution">
+        <h3 class="ti-label">気をつけたいこと</h3>
+        <p class="ti-text">${t.caution}</p>
+      </section>
+
+      <section class="ti-block">
+        <h3 class="ti-label">一緒に登ると面白い相手</h3>
+        ${matches}
+      </section>
+
+      <p class="ti-item">持ちもの：${c.item}</p>
+    </article>`;
+}).join("");
+</script>
+</body>
+</html>
