@@ -124,7 +124,14 @@ body {
   letter-spacing: .04em;
   margin-bottom: 8px;
 }
-.hero-beta { margin: -4px 0 6px; }
+.hero-ver {
+  font-family: "Outfit", var(--font);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: .1em;
+  color: #B9C6BF;
+  margin: -12px 0 16px;
+}
 .hero-title .beta {
   display: inline-block;
   vertical-align: baseline;
