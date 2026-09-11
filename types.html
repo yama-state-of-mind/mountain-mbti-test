@@ -18,13 +18,13 @@
   <header class="list-head">
     <h1>16タイプの詳細</h1>
     <p class="list-en"><b>16</b> TYPES OF HIKERS</p>
-    <p>系統を選んで、4タイプずつ見られます。</p>
+    <p>生息エリアを選んで、4タイプずつ見られます。</p>
   </header>
 
   <!-- ========== 入口：仕組みの解説 ========== -->
-  <!-- ========== 系統別の詳細 ========== -->
+  <!-- ========== 生息エリア別の詳細 ========== -->
   <div id="detail">
-    <nav class="group-tabs" id="group-tabs" aria-label="系統の切り替え"></nav>
+    <nav class="group-tabs" id="group-tabs" aria-label="生息エリアの切り替え"></nav>
     <div id="group-body"></div>
   </div>
 
@@ -38,13 +38,13 @@
 <script>
 /* =========================================================
    16タイプ一覧
-   入口では仕組みの解説だけを見せ、系統を選ぶと詳細に切り替わる。
-   URLは ?g=PS で系統指定、#PSLC でタイプ指定に対応。
+   入口では仕組みの解説だけを見せ、生息エリアを選ぶと詳細に切り替わる。
+   URLは ?g=PS で生息エリア指定、#PSLC でタイプ指定に対応。
    ========================================================= */
 const ORDER = ["PS", "PG", "ES", "EG"];
 const codesOf = (key) => Object.keys(TYPES).filter((c) => c.slice(0, 2) === key);
 
-/* ---------- 系統切り替えタブ ---------- */
+/* ---------- 生息エリア切り替えタブ ---------- */
 document.getElementById("group-tabs").innerHTML = ORDER.map((key) => {
   const g = GROUPS[key];
   return `<button class="gtab" data-g="${key}">
@@ -124,6 +124,7 @@ function typeCard(code, asSecret) {
         </div>
         <div class="ti-title">
           <span class="tc-code" style="background:${sec ? "#A5761F" : g.deep}">${code}${sec ? '<em>SECRET</em>' : ""}</span>
+          <span class="tc-area" style="color:${g.deep}">生息エリア：${g.name}</span>
           <h3 class="ti-name">${c.animal}</h3>
           <p class="tc-type">${sec ? sec.typeName : t.name}</p>
           <p class="tc-copy">「${sec ? sec.copy : t.copy}」</p>
@@ -196,7 +197,7 @@ function showGroup(key, anchor) {
 }
 
 /* ---------- URLから初期表示を決める ----------
-   ?g=PS があればその系統。なければ #PSLC のアンカーから逆引きする */
+   ?g=PS があればその生息エリア。なければ #PSLC のアンカーから逆引きする */
 function routeFromURL() {
   const q = new URLSearchParams(location.search).get("g");
   const hash = (location.hash || "").slice(1);
@@ -215,7 +216,7 @@ document.getElementById("group-tabs").addEventListener("click", (e) => {
   showGroup(tab.dataset.g);
 });
 
-/* 詳細内の相性リンクは、別系統なら切り替えてから移動する */
+/* 詳細内の相性リンクは、別生息エリアなら切り替えてから移動する */
 document.getElementById("group-body").addEventListener("click", (e) => {
   const link = e.target.closest(".match");
   if (!link) return;

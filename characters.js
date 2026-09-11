@@ -534,23 +534,23 @@ EGFA: { animal: "ノウサギ", item: "自撮り棒つきスマホ", svg: `
 
 };
 
-/* ---------- 4系統の色 ----------
+/* ---------- 4生息エリアの色 ----------
    目的軸（高山 P / 森 E）× 仲間軸（単独 S / 群れ G）で4分類。
    band  : ページ背景に敷く淡色
    circle: キャラクターの背景円（bandより一段淡い）
    deep  : コードのプレート色（白抜き文字）*/
 const GROUPS = {
-  PS: { name: "孤峰",   lead: "自分の足で、頂へ"     , axis: "ピークハント × ソロ",
+  PS: { name: "岩稜帯", lead: "高い場所へ、ひとりで", axis: "ピークハント × ソロ",
         band: "#E3EBF0", circle: "#E3EDF3", deep: "#3E5C6E" },
-  PG: { name: "稜線",   lead: "仲間と、尾根づたいに", axis: "ピークハント × グループ",
+  PG: { name: "稜線",   lead: "尾根づたいに、仲間と", axis: "ピークハント × グループ",
         band: "#F3E6E1", circle: "#F5E7E1", deep: "#B5533A" },
-  ES: { name: "樹林帯", lead: "静かな森を、ひとりで"  , axis: "エンジョイ × ソロ",
+  ES: { name: "樹林帯", lead: "静かな森を、ひとりで", axis: "エンジョイ × ソロ",
         band: "#E2ECE4", circle: "#E1EDE5", deep: "#4E7A57" },
-  EG: { name: "高原",   lead: "開けた場所で、仲間と"  , axis: "エンジョイ × グループ",
+  EG: { name: "高原",   lead: "開けた場所で、仲間と", axis: "エンジョイ × グループ",
         band: "#F4EBDB", circle: "#F6EDDC", deep: "#A5761F" },
 };
 
-/* コードから系統を引く（PSLC → PS） */
+/* コードから生息エリアを引く（PSLC → PS） */
 function groupOf(code) {
   return GROUPS[code.slice(0, 2)] || GROUPS.PS;
 }

@@ -1423,3 +1423,12 @@ body {
   padding: 2px 7px;
 }
 
+
+/* 詳細カードの生息エリア表記 */
+.tc-area {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 700;
+  margin-left: 8px;
+  vertical-align: 1px;
+}

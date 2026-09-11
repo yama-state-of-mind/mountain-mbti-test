@@ -67,7 +67,7 @@ function showScreen(name) {
 
 /* ---------- スタート画面のキャラクター配置 ----------
    山のイラストの上に孤峰・稜線（高山）、ページ下部に静林・陽だまり（森）。
-   系統ごとに帯を作り、それぞれの淡色を敷く */
+   生息エリアごとに帯を作り、それぞれの淡色を敷く */
 /* 問題数は QUIZ から取るので、問題を増減しても表示が自動で追従する */
 (() => {
   ["progress-total", "lead-count", "note-count"].forEach((id) => {
@@ -356,7 +356,7 @@ function showResult() {
   plate.style.background = g.deep;
   $("#result-hero").style.background = g.band;
   const grp = $("#result-group");
-  grp.textContent = g.name;
+  grp.textContent = "生息エリア：" + g.name;
   grp.style.color = g.deep;
   const ch = CHARACTERS[code];
   const secret = findSecret(code);
@@ -376,7 +376,7 @@ function showResult() {
   $("#result-features").textContent = secret ? secret.features : type.features;
   $("#result-caution").textContent = secret ? secret.caution : type.caution;
 
-  // 4軸のタグ（Pピークハント / G系統 …）
+  // 4軸のタグ（Pピークハント / G生息エリア …）
   $("#result-axtags").innerHTML = code.split("").map((ch, i) => {
     const ax = AXES[i];
     const isFirst = ch === ax.a;

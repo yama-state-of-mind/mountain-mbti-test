@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>診断の仕組み｜登山タイプ診断</title>
-<meta name="description" content="4つのアルファベットの意味と、16タイプが分かれる4つの系統について説明します。">
+<meta name="description" content="4つのアルファベットの意味と、16タイプが分かれる4つの生息エリアについて説明します。">
 <meta name="theme-color" content="#1E3A31">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,10 +31,9 @@
     </section>
 
     <section class="legend legend-plain">
-      <h2>16タイプは4つの系統に分かれます</h2>
-      <p>4つの問いのうち、<b>1つ目（どこを目指すか）</b>と<b>2つ目（誰と行くか）</b>は、
-         山の過ごし方を大きく決めます。この2つの組み合わせで、16タイプは4つのまとまりに分かれます。
-         それぞれに山の場所の名前がついています。</p>
+      <h2>キャラクターは4つの生息エリアに住んでいます</h2>
+      <p>4つの問いのうち、<b>1つ目（どこを目指すか）</b>と<b>2つ目（誰と行くか）</b>の組み合わせで、
+         16体のキャラクターは4つの生息エリアに分かれます。</p>
     </section>
 
     <div class="matrix">
@@ -64,7 +63,7 @@
 <script src="data.js"></script>
 <script src="characters.js"></script>
 <script>
-/* 診断の仕組みのページ。4軸の解説と、4系統のカードを組み立てる */
+/* 診断の仕組みのページ。4軸の解説と、4生息エリアのカードを組み立てる */
 const ORDER = ["PS", "PG", "ES", "EG"];
 const codesOf = (key) => Object.keys(TYPES).filter((c) => c.slice(0, 2) === key);
 
@@ -116,7 +115,7 @@ document.getElementById("matrix").insertAdjacentHTML("beforeend", ORDER.map((key
     </div>`;
 }).join(""));
 
-/* キャラクター以外の場所を押したら、その系統の先頭へ */
+/* キャラクター以外の場所を押したら、その生息エリアの先頭へ */
 document.getElementById("matrix").addEventListener("click", (e) => {
   if (e.target.closest(".mx-char")) return;   // キャラクターは個別のリンクに任せる
   const cell = e.target.closest(".mx-cell");
