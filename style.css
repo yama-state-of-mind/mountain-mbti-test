@@ -447,19 +447,18 @@ body {
 }
 .axis-bar.side-a { background: var(--pine); }
 .axis-bar.side-b { background: var(--fjord); margin-left: auto; }
-.axis-pct {
-  font-size: 12px;
-  color: var(--stone);
-  margin-top: 5px;
-  text-align: center;
-}
-.axis-pct b {
+/* 勝った側はオーカーで大きく、負けた側は薄く */
+.axis-labels .win { color: var(--pine); font-weight: 700; }
+.axis-labels .lose { color: #B9C6BF; font-weight: 500; }
+.axis-labels b {
   font-family: "Outfit", var(--font);
   font-size: 14.5px;
   font-weight: 700;
-  color: var(--sun);
-  margin-left: 5px;
+  margin: 0 0 0 6px;
 }
+.axis-labels .win b { color: var(--sun); }
+.axis-labels .lose b { color: #C9D2CC; }
+.axis-labels span:last-child b { margin: 0 6px 0 0; }
 
 .result-actions {
   display: flex;
@@ -995,7 +994,8 @@ body {
 .mx-cell {
   position: relative;
   z-index: 2;
-  display: block;
+  display: flex;
+  flex-direction: column;
   border-radius: 16px;
   padding: 10px 9px 10px;
   text-decoration: none;
@@ -1009,6 +1009,7 @@ body {
 .mx-bg {
   position: absolute;
   top: 6px;
+  z-index: 0;
   font-size: 30px;
   font-weight: 900;
   letter-spacing: .02em;
@@ -1019,6 +1020,10 @@ body {
 }
 .mx-l .mx-bg { left: 10px; }
 .mx-r .mx-bg { right: 10px; }
+/* 下段は文字を下に置く */
+.mx-bottom .mx-bg { top: auto; bottom: 6px; }
+.mx-bottom .mx-lead { order: 2; margin-top: 6px; margin-bottom: 34px; }
+.mx-bottom .mx-chars { order: 1; margin-top: 2px; }
 .mx-r { text-align: right; }
 .mx-r .mx-code { text-align: left; }
 .mx-name {
@@ -1030,6 +1035,7 @@ body {
 }
 .mx-lead {
   position: relative;
+  z-index: 1;
   display: block;
   font-size: 10.5px;
   font-weight: 700;
@@ -1040,6 +1046,7 @@ body {
 }
 .mx-chars {
   position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 3px;
@@ -1262,4 +1269,70 @@ body {
   .match-row { gap: 5px; }
   .type-item .match-row .match { padding: 9px 5px 10px; }
   .type-item .match-row .match-why { font-size: 10px; }
+}
+
+/* =========================================================
+   結果画面：相性3人を1行3列に
+   ========================================================= */
+.result .match-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  text-align: left;
+}
+.result .match-row .match {
+  display: block;
+  text-align: center;
+  border-radius: 14px;
+  padding: 11px 7px 12px;
+  text-decoration: none;
+  color: inherit;
+}
+.result .match-row .match:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+.result .match-row .char-sm { width: 54px; margin: 4px auto 5px; display: block; }
+.result .match-row .match-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--stone);
+  line-height: 1.45;
+  min-height: 2.9em;
+}
+.result .match-row .match-code {
+  display: inline-block;
+  font-family: "Outfit", var(--font);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: #fff;
+  border-radius: 4px;
+  padding: 2px 7px;
+}
+.result .match-row .match-name {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 900;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+.result .match-row .match-type {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--stone);
+  margin-top: 1px;
+  line-height: 1.4;
+}
+.result .match-row .match-why {
+  display: block;
+  font-size: 10.5px;
+  color: #4a5a52;
+  margin-top: 6px;
+  line-height: 1.7;
+  text-align: left;
+}
+@media (max-width: 400px) {
+  .result .match-row { gap: 5px; }
+  .result .match-row .match { padding: 9px 5px 10px; }
+  .result .match-row .match-why { font-size: 10px; }
 }

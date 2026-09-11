@@ -68,6 +68,11 @@ function showScreen(name) {
 /* ---------- スタート画面のキャラクター配置 ----------
    山のイラストの上に孤峰・稜線（高山）、ページ下部に静林・陽だまり（森）。
    系統ごとに帯を作り、それぞれの淡色を敷く */
+(() => {
+  const total = document.getElementById("progress-total");
+  if (total) total.textContent = QUIZ.length;
+})();
+
 function renderCast() {
   if (typeof characterSVG !== "function") return;
   const codes = Object.keys(TYPES);
@@ -264,9 +269,10 @@ function flipAxis(code, axisIndex) {
 }
 
 function findMatches(code, secret) {
+  const w = (typeof MATCH_WHY !== "undefined" && MATCH_WHY[code]) || {};
   const list = [
-    { label: "息が合う相手",     code: flipAxis(code, 2), why: "計画の立て方が逆どうし。抜けを補い合えます" },
-    { label: "刺激をくれる相手", code: flipAxis(code, 0), why: "登り方は近いのに、山に求めるものが違います" },
+    { label: "息が合う相手",     code: flipAxis(code, 2), why: w.calm || "" },
+    { label: "刺激をくれる相手", code: flipAxis(code, 0), why: w.spark || "" },
   ];
 
   if (secret) {
@@ -274,16 +280,14 @@ function findMatches(code, secret) {
     list.push({
       label: "相性は文句なし",
       code: code,
-      why: "同じ山を選び、同じ場所で足を止めます",
-      normal: true,
+      why: typeof SECRET_MATCH_WHY !== "undefined" ? SECRET_MATCH_WHY : "",
     });
   } else {
     // 目的と仲間の両方が逆の相手。相手から見てもあなたが出る
-    const opposite = flipAxis(flipAxis(code, 0), 1);
     list.push({
       label: "山の見方が正反対の相手",
-      code: opposite,
-      why: (typeof OPPOSITE_WHY !== "undefined" && OPPOSITE_WHY[code]) || "",
+      code: flipAxis(flipAxis(code, 0), 1),
+      why: w.opp || "",
     });
   }
   return list;
@@ -382,38 +386,33 @@ function showResult() {
       const t = TYPES[m.code] || { name: "—" };
       const mc = CHARACTERS[m.code];
       return `
-      <div class="match">
-        <a class="match-char" href="types.html#${m.code}" aria-label="${t.name}の紹介を見る">
-          ${characterSVG(m.code, "char char-sm")}
-        </a>
-        <div class="match-body">
-          <p class="match-label">${m.label}</p>
-          <p class="match-name">
-            <span class="match-code" style="background:${groupOf(m.code).deep}">${m.code}</span>
-            <a class="match-link" href="types.html#${m.code}">${mc ? mc.animal : t.name}</a>
-          </p>
-          <p class="match-type">${t.name}</p>
-          <p class="match-why">${m.why}</p>
-        </div>
-      </div>`;
+      <a class="match" href="types.html#${m.code}" style="background:${groupOf(m.code).band}">
+        <span class="match-label">${m.label}</span>
+        ${characterSVG(m.code, "char char-sm")}
+        <span class="match-code" style="background:${groupOf(m.code).deep}">${m.code}</span>
+        <span class="match-name">${mc ? mc.animal : t.name}</span>
+        <span class="match-type">${t.name}</span>
+        <span class="match-why">${m.why}</span>
+      </a>`;
     })
     .join("");
 
   $("#result-axes").innerHTML = detail
     .map((d) => {
       const winPct = d.aWins ? d.aPct : d.bPct;
-      const winName = d.aWins ? d.aName : d.bName;
-      const winChar = d.aWins ? d.a : d.b;
       return `
       <div class="axis">
         <div class="axis-labels">
-          <span class="${d.aWins ? "" : "lose"}">${d.a} ${d.aName}</span>
-          <span class="${d.aWins ? "lose" : ""}">${d.bName} ${d.b}</span>
+          <span class="${d.aWins ? "win" : "lose"}">
+            ${d.a} ${d.aName}<b>${d.aPct}%</b>
+          </span>
+          <span class="${d.aWins ? "lose" : "win"}">
+            <b>${d.bPct}%</b>${d.bName} ${d.b}
+          </span>
         </div>
         <div class="axis-track">
           <div class="axis-bar ${d.aWins ? "side-a" : "side-b"}" style="width:${winPct}%"></div>
         </div>
-        <p class="axis-pct">${winChar}（${winName}）<b>${winPct}%</b></p>
       </div>`;
     })
     .join("");

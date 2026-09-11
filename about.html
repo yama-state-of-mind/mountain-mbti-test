@@ -18,18 +18,23 @@
   <header class="list-head">
     <h1>診断の仕組み</h1>
     <p class="list-en"><b>16</b> TYPES OF HIKERS</p>
-    <p>4つのアルファベットの意味と、16タイプが分かれる4つの系統を説明します。</p>
+    <p>この診断は、山との付き合い方を<b>4つの問い</b>で見ています。<br>
+       その答えの組み合わせが、<b>16のタイプ</b>になります。</p>
   </header>
 
     <section class="legend">
-      <h2>4つのアルファベットの意味</h2>
-      <p>診断結果は <b>PSLC</b> のような4文字で表されます。1文字ずつが、山との付き合い方を分ける軸になっています。</p>
+      <h2>4つの問い</h2>
+      <p>山に行くとき、あなたは何を大事にしていますか。その答えを4つの問いで聞いています。
+         それぞれ2つの方向があり、近いほうの文字が1つずつ決まります。
+         結果の <b>PSLC</b> のような4文字は、この答えを並べたものです。</p>
       <div class="axis-table" id="axis-table"></div>
     </section>
 
     <section class="legend legend-plain">
       <h2>16タイプは4つの系統に分かれます</h2>
-      <p>最初の2文字、つまり<b>目的</b>と<b>仲間</b>の組み合わせで、16タイプは大きく4つに分かれます。見たい系統を選んでください。</p>
+      <p>4つの問いのうち、<b>1つ目（どこを目指すか）</b>と<b>2つ目（誰と行くか）</b>は、
+         山の過ごし方を大きく決めます。この2つの組み合わせで、16タイプは4つのまとまりに分かれます。
+         それぞれに山の場所の名前がついています。</p>
     </section>
 
     <div class="matrix">
@@ -64,10 +69,10 @@ const ORDER = ["PS", "PG", "ES", "EG"];
 const codesOf = (key) => Object.keys(TYPES).filter((c) => c.slice(0, 2) === key);
 
 const AXIS_MEMO = {
-  PE: "山頂に立つことに価値を置くか、そこに至る過程を味わうか",
-  SG: "ひとりで山と向き合う時間か、誰かと分け合う時間か",
-  LF: "数字と情報で組み立てるか、その日の感覚で決めるか",
-  CA: "備えを厚くして安全側に振るか、身軽に踏み込むか",
+  PE: "山に行く目的は、頂に立つこと？　それとも道のりを楽しむこと？",
+  SG: "山にいる時間は、ひとりがいい？　それとも誰かと一緒がいい？",
+  LF: "行く前の準備は、しっかり調べる？　それとも当日の気分しだい？",
+  CA: "危なそうな場面では、まず引く？　それとも行けると判断する？",
 };
 document.getElementById("axis-table").innerHTML = AXES.map((ax) => `
   <div class="ax-item">
@@ -95,15 +100,16 @@ document.getElementById("axis-table").innerHTML = AXES.map((ax) => `
 /* 目的（縦）× 仲間（横）の4象限。左上から 孤峰・稜線・静林・陽だまり */
 document.getElementById("matrix").insertAdjacentHTML("beforeend", ORDER.map((key) => {
   const g = GROUPS[key];
+  const side = (key === "PS" || key === "ES") ? "l" : "r";
+  const row = (key === "PS" || key === "PG") ? "top" : "bottom";
   return `
-    <a class="mx-cell mx-${key === "PS" || key === "ES" ? "l" : "r"}"
+    <a class="mx-cell mx-${side} mx-${row}"
        href="types.html?g=${key}" style="background:${g.band}">
       <span class="mx-bg" style="color:${g.deep}">${g.name}</span>
       <span class="mx-lead">${g.lead}</span>
       <span class="mx-chars">
         ${codesOf(key).map((c) => characterSVG(c, "char", true)).join("")}
       </span>
-      <span class="mx-code">${key}＊＊</span>
     </a>`;
 }).join(""));
 </script>
