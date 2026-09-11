@@ -54,7 +54,10 @@
       </p>
       <button class="btn btn-primary" id="btn-start">診断をはじめる</button>
       <p class="hero-note">所要時間 約2分・全12問</p>
-      <p class="hero-link"><a href="types.html">16タイプの一覧を見る</a></p>
+      <p class="hero-link">
+        <a href="types.html?g=PS">16タイプの一覧を見る</a>
+        <a href="about.html">診断の仕組み</a>
+      </p>
       <div class="cast" id="cast-bottom"><!-- 静林・陽だまり --></div>
     </div>
   </section>
@@ -64,35 +67,43 @@
     <header class="quiz-header">
       <div class="climb" id="progress-bar-wrap" role="progressbar"
            aria-label="登頂までの進み具合" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0">
-        <svg class="climb-svg" viewBox="0 0 340 50">
+        <svg class="climb-svg" viewBox="0 0 340 52">
           <!-- 登山道（未踏） -->
           <path id="climb-path" class="climb-route"
-                d="M14 44 L150 30 L190 31 L317 14"/>
+                d="M14 46 L150 32 L190 33 L317 16"/>
           <!-- 登山道（歩いた分） -->
           <path id="climb-progress" class="climb-done"
-                d="M14 44 L150 30 L190 31 L317 14"/>
+                d="M14 46 L150 32 L190 33 L317 16"/>
 
-          <!-- 五合目の道標 -->
+          <!-- 登山口の看板 -->
+          <g id="sign-start" class="sign passed">
+            <path class="pole" d="M14 46 L14 38"/>
+            <rect class="board" x="1" y="28" width="26" height="10" rx="3"/>
+            <text class="board-text" x="14" y="35.3">Start</text>
+            <circle class="node" cx="14" cy="46" r="4.6"/>
+          </g>
+
+          <!-- 中間地点の旗 -->
           <g id="sign-mid" class="sign">
-            <path class="pole" d="M170 30.4 L170 24"/>
-            <rect class="board" x="143" y="14" width="54" height="10" rx="3"/>
-            <text class="board-text" x="170" y="21.4">5th Station</text>
+            <path class="pole" d="M170 32.6 L170 20"/>
+            <path class="flag" d="M170 20 L186 24 L170 28 Z"/>
+            <text class="flag-text" x="170" y="17">Midpoint</text>
+            <circle class="node" cx="170" cy="32.6" r="4.2"/>
           </g>
 
-          <!-- 山頂の道標 -->
+          <!-- 山頂の看板 -->
           <g id="sign-peak" class="sign">
-            <path class="pole" d="M317 14 L317 11"/>
-            <rect class="board" x="298" y="1" width="38" height="10" rx="3"/>
-            <text class="board-text" x="317" y="8.4">Peak!</text>
+            <path class="pole" d="M317 16 L317 9"/>
+            <rect class="board" x="296" y="-1" width="38" height="10" rx="3"/>
+            <text class="board-text" x="315" y="6.3">Summit!</text>
+            <circle class="node" cx="317" cy="16" r="4.6"/>
           </g>
 
-          <!-- 登山口 -->
-          <circle class="climb-start" cx="14" cy="44" r="6.5"/>
           <!-- 現在地 -->
-          <circle id="climb-marker" class="climb-marker" cx="14" cy="44" r="4.5"/>
+          <circle id="climb-marker" class="climb-marker" cx="14" cy="46" r="5"/>
 
           <!-- 残り問数 -->
-          <text class="climb-count" x="337" y="46"><tspan id="progress-count">0</tspan> / 12</text>
+          <text class="climb-count" x="337" y="48"><tspan id="progress-count">0</tspan> / 12</text>
         </svg>
       </div>
     </header>
@@ -110,12 +121,26 @@
   <!-- ========== 結果画面 ========== -->
   <section id="screen-result" class="screen">
     <div class="result">
-      <p class="result-eyebrow">あなたの登山タイプは</p>
-      <p class="result-code" id="result-code"></p>
-      <div class="result-char" id="result-char"><!-- キャラクター --></div>
-      <h2 class="result-animal" id="result-animal"></h2>
-      <p class="result-name" id="result-name"></p>
-      <p class="result-copy" id="result-copy"></p>
+      <div class="result-hero" id="result-hero">
+        <p class="result-eyebrow">あなたの登山タイプは</p>
+        <p class="result-id">
+          <span class="result-code" id="result-code"></span>
+          <span class="result-group" id="result-group"></span>
+        </p>
+        <div class="result-char" id="result-char"><!-- キャラクター --></div>
+        <h2 class="result-animal" id="result-animal"></h2>
+        <p class="result-name" id="result-name"></p>
+        <p class="result-copy" id="result-copy"></p>
+        <div class="result-axtags" id="result-axtags"><!-- 4軸のタグ --></div>
+        <svg class="ridge-cut" viewBox="0 0 400 58" preserveAspectRatio="none" aria-hidden="true">
+          <!-- 奥の稜線 -->
+          <path class="rc-back"
+                d="M0 58 L0 34 L46 20 L88 32 L140 2 L196 30 L238 18 L286 34 L336 8 L376 24 L400 18 L400 58 Z"/>
+          <!-- 手前の稜線（ページ背景と同じ色でくり抜く） -->
+          <path class="rc-front"
+                d="M0 58 L0 46 L54 30 L104 44 L162 18 L214 42 L258 32 L308 46 L358 26 L400 38 L400 58 Z"/>
+        </svg>
+      </div>
 
       <section class="panel">
         <h3 class="panel-title">特徴</h3>
@@ -140,7 +165,7 @@
           結果をシェアする
         </a>
         <button class="btn btn-ghost" id="btn-retry">もう一度診断する</button>
-        <p class="hero-link"><a href="types.html">16タイプすべてを見る</a></p>
+        <p class="hero-link"><a href="types.html?g=PS">16タイプすべてを見る</a></p>
       </div>
     </div>
   </section>

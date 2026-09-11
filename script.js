@@ -287,6 +287,10 @@ function showResult() {
   const plate = $("#result-code");
   plate.textContent = code;
   plate.style.background = g.deep;
+  $("#result-hero").style.background = g.band;
+  const grp = $("#result-group");
+  grp.textContent = g.name;
+  grp.style.color = g.deep;
   const ch = CHARACTERS[code];
   $("#result-char").innerHTML = characterSVG(code, "char char-lg");
   $("#result-animal").textContent = ch ? ch.animal : type.name;
@@ -294,6 +298,14 @@ function showResult() {
   $("#result-copy").textContent = "「" + type.copy + "」";
   $("#result-features").textContent = type.features;
   $("#result-caution").textContent = type.caution;
+
+  // 4軸のタグ（Pピークハント / Gグループ …）
+  $("#result-axtags").innerHTML = code.split("").map((ch, i) => {
+    const ax = AXES[i];
+    const isFirst = ch === ax.a;
+    return `<span class="axtag ${isFirst ? "s-a" : "s-b"}">
+      <b>${ch}</b>${isFirst ? ax.aName : ax.bName}</span>`;
+  }).join("");
 
   $("#result-match").innerHTML = findMatches(code)
     .map((m) => {
@@ -344,6 +356,7 @@ function showResult() {
     encodeURIComponent(SITE_URL);
 
   showScreen("result");
+  revealResult();
 
   requestAnimationFrame(() => {
     document.querySelectorAll(".axis-bar").forEach((bar) => {
@@ -352,6 +365,29 @@ function showResult() {
       requestAnimationFrame(() => (bar.style.width = w));
     });
   });
+}
+
+/* ---------- 結果を順番に見せる ----------
+   上から順に少しずつ遅らせて現れるようにする */
+function revealResult() {
+  const box = document.querySelector(".result");
+  if (!box) return;
+
+  const items = [];
+  Array.from(box.children).forEach((el) => {
+    if (el.id === "result-hero") {
+      Array.from(el.children).forEach((h) => {
+        if (!h.classList.contains("wave")) items.push(h);
+      });
+    } else {
+      items.push(el);
+    }
+  });
+
+  box.classList.remove("reveal");
+  items.forEach((el, i) => el.style.setProperty("--i", i));
+  void box.offsetWidth;   // アニメーションをやり直させる
+  box.classList.add("reveal");
 }
 
 /* ---------- もう一度 ---------- */

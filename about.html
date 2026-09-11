@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>診断の仕組み｜登山タイプ診断</title>
+<meta name="description" content="4つのアルファベットの意味と、16タイプが分かれる4つのグループについて説明します。">
+<meta name="theme-color" content="#1E3A31">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="list-page">
+
+  <header class="list-head">
+    <h1>診断の仕組み</h1>
+    <p class="list-en"><b>16</b> TYPES OF HIKERS</p>
+    <p>4つのアルファベットの意味と、16タイプが分かれるグループを説明します。</p>
+  </header>
+
+    <section class="legend">
+      <h2>4つのアルファベットの意味</h2>
+      <p>診断結果は <b>PSLC</b> のような4文字で表されます。1文字ずつが、山との付き合い方を分ける軸になっています。</p>
+      <div class="axis-table" id="axis-table"></div>
+    </section>
+
+    <section class="legend legend-plain">
+      <h2>16タイプは4つのグループに分かれます</h2>
+      <p>最初の2文字、つまり<b>目的</b>と<b>仲間</b>の組み合わせで、16タイプは大きく4つに分かれます。見たいグループを選んでください。</p>
+    </section>
+
+    <div class="group-cards" id="group-cards"></div>
+
+  <p class="list-foot hero-link"><a href="types.html?g=PS">16タイプの詳細を見る</a></p>
+  <p class="list-foot hero-link"><a href="index.html">診断をはじめる</a></p>
+
+</div>
+
+<script src="data.js"></script>
+<script src="characters.js"></script>
+<script>
+/* 診断の仕組みのページ。4軸の解説と、4グループのカードを組み立てる */
+const ORDER = ["PS", "PG", "ES", "EG"];
+const codesOf = (key) => Object.keys(TYPES).filter((c) => c.slice(0, 2) === key);
+
+const AXIS_MEMO = {
+  PE: "山頂に立つことに価値を置くか、そこに至る過程を味わうか",
+  SG: "ひとりで山と向き合う時間か、誰かと分け合う時間か",
+  LF: "数字と情報で組み立てるか、その日の感覚で決めるか",
+  CA: "備えを厚くして安全側に振るか、身軽に踏み込むか",
+};
+document.getElementById("axis-table").innerHTML = AXES.map((ax, i) => `
+  <div class="ax-row">
+    <span class="ax-pos">${i + 1}文字目</span>
+    <div class="ax-main">
+      <p class="ax-title">${ax.title}</p>
+      <p class="ax-pair"><b>${ax.a}</b> ${ax.aName}　／　<b>${ax.b}</b> ${ax.bName}</p>
+      <p class="ax-memo">${AXIS_MEMO[ax.id]}</p>
+    </div>
+  </div>`).join("");
+
+document.getElementById("group-cards").innerHTML = ORDER.map((key) => {
+  const g = GROUPS[key];
+  return `
+    <a class="gcard" href="types.html?g=${key}" style="background:${g.band}">
+      <span class="gcard-bg" style="color:${g.deep}">${g.name}</span>
+      <span class="gcard-head">
+        <span class="gcard-name" style="color:${g.deep}">${g.name}</span>
+        <span class="gcard-lead">${g.lead}</span>
+      </span>
+      <span class="gcard-chars">
+        ${codesOf(key).map((c) => characterSVG(c, "char", true)).join("")}
+      </span>
+      <span class="gcard-foot">
+        <span class="gcard-axis">${g.axis}</span>
+        <span class="gcard-code">${key}＊＊</span>
+      </span>
+    </a>`;
+}).join("");
+</script>
+</body>
+</html>
