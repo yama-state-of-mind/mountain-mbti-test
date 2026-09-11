@@ -25,7 +25,25 @@ function shuffleQuestions(list) {
   return list.slice(); // 条件を満たす並びが見つからなかった場合
 }
 
-let QUIZ = shuffleQuestions(QUESTIONS);
+/* ---------- シークレット問題の差し込み ----------
+   SECRET_RATE の確率で1つ選び、同じ軸の問題1つと入れ替える。
+   入れ替えた問題には secret を付けておき、判定時に見る */
+function injectSecret(list) {
+  if (typeof SECRETS === "undefined" || Math.random() >= SECRET_RATE) return list;
+
+  const sec = SECRETS[Math.floor(Math.random() * SECRETS.length)];
+  const targets = list
+    .map((q, i) => (q.axis === sec.axis ? i : -1))
+    .filter((i) => i >= 0);
+  if (!targets.length) return list;
+
+  const at = targets[Math.floor(Math.random() * targets.length)];
+  const out = list.slice();
+  out[at] = { ...sec.question, secret: sec.id };
+  return out;
+}
+
+let QUIZ = injectSecret(shuffleQuestions(QUESTIONS));
 const answers = new Array(QUESTIONS.length).fill(null); // 0〜5（0=A強, 5=B強）
 let currentPage = 0;
 const totalPages = Math.ceil(QUESTIONS.length / QUESTIONS_PER_PAGE);
@@ -278,6 +296,27 @@ function calcResult() {
   return { code, detail };
 }
 
+/* ---------- シークレットの判定 ----------
+   出題されたシークレット問題で最も強い側（端）を選び、
+   かつ結果が対象の系統だったときだけ成立する */
+function findSecret(code) {
+  if (typeof SECRETS === "undefined") return null;
+
+  for (let i = 0; i < QUIZ.length; i++) {
+    const id = QUIZ[i].secret;
+    if (!id) continue;
+    const sec = SECRETS.find((x) => x.id === id);
+    if (!sec) continue;
+    if (code !== sec.code) continue;
+
+    const v = answers[i];
+    const hitA = sec.hit === "a" && v === 0;   // 選択肢A側のいちばん端
+    const hitB = sec.hit === "b" && v === 5;   // 選択肢B側のいちばん端
+    if (hitA || hitB) return sec;
+  }
+  return null;
+}
+
 /* ---------- 結果表示 ---------- */
 function showResult() {
   const { code, detail } = calcResult();
@@ -292,13 +331,22 @@ function showResult() {
   grp.textContent = g.name;
   grp.style.color = g.deep;
   const ch = CHARACTERS[code];
-  $("#result-char").innerHTML = characterSVG(code, "char char-lg");
-  $("#result-animal").textContent = ch ? ch.animal : type.name;
-  $("#result-item").innerHTML = ch ? `<b>持ちもの</b>${ch.item}` : "";
-  $("#result-name").textContent = type.name;
-  $("#result-copy").textContent = "「" + type.copy + "」";
-  $("#result-features").textContent = type.features;
-  $("#result-caution").textContent = type.caution;
+  const secret = findSecret(code);
+
+  $("#result-char").innerHTML = secret
+    ? secretSVG(secret.id, "char char-lg")
+    : characterSVG(code, "char char-lg");
+  $("#result-animal").textContent = secret ? secret.animal : (ch ? ch.animal : type.name);
+  $("#result-name").textContent = secret ? secret.typeName : type.name;
+  $("#secret-badge").hidden = !secret;
+  $("#secret-note").hidden = !secret;
+  if (secret) $("#secret-note").textContent = secret.note;
+  document.querySelector(".result").classList.toggle("is-secret", !!secret);
+  const item = secret ? SECRET_CHARACTERS[secret.id].item : (ch ? ch.item : "");
+  $("#result-item").innerHTML = item ? `<b>持ちもの</b>${item}` : "";
+  $("#result-copy").textContent = "「" + (secret ? secret.copy : type.copy) + "」";
+  $("#result-features").textContent = secret ? secret.features : type.features;
+  $("#result-caution").textContent = secret ? secret.caution : type.caution;
 
   // 4軸のタグ（Pピークハント / G系統 …）
   $("#result-axtags").innerHTML = code.split("").map((ch, i) => {
@@ -395,6 +443,6 @@ function revealResult() {
 $("#btn-retry").addEventListener("click", () => {
   answers.fill(null);
   currentPage = 0;
-  QUIZ = shuffleQuestions(QUESTIONS); // 順番を引き直す
+  QUIZ = injectSecret(shuffleQuestions(QUESTIONS)); // 順番とシークレットを引き直す
   showScreen("start");
 });
