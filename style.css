@@ -95,13 +95,6 @@ body {
   text-align: center;
   padding: 24px 0;
 }
-.hero-mountains {
-  width: min(320px, 82%);
-  display: block;
-  margin: 0 auto 18px;
-}
-.hero-mountains .mt.back  { fill: none; stroke: var(--fjord); stroke-width: 3; stroke-linejoin: round; opacity: .55; }
-.hero-mountains .mt.front { fill: none; stroke: var(--pine);  stroke-width: 3.5; stroke-linejoin: round; }
 .hero-mountains .sun  { fill: var(--sun); }
 .hero-mountains .snow { fill: var(--pine); opacity: .9; }
 
@@ -594,7 +587,7 @@ body {
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 }
-#cast-top { margin-bottom: 22px; }
+#cast-top { margin-bottom: 30px; }
 #cast-bottom { margin-top: 30px; }
 .cast-group {
   display: grid;

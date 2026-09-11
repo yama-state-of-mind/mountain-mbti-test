@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>登山タイプ診断｜16 TYPES OF HIKERS</title>
-<meta name="description" content="12の質問であなたの登山スタイルを16タイプに診断。目的・仲間・計画・リスクの4つの軸から、あなたらしい山との付き合い方が見えてきます。">
+<meta name="description" content="14の質問であなたの登山スタイルを16タイプに診断。目的・仲間・計画・リスクの4つの軸から、あなたらしい山との付き合い方が見えてきます。">
 
 <!-- ========== SNSシェア用（OGP） ==========
      公開URLが変わったら og:url と og:image の2か所を書き換えてください -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="登山タイプ診断">
 <meta property="og:title" content="登山タイプ診断｜16 TYPES OF HIKERS">
-<meta property="og:description" content="12の質問で、あなたの登山スタイルを16タイプに分類。目的・仲間・計画・リスクの4軸で診断します。">
+<meta property="og:description" content="14の質問で、あなたの登山スタイルを16タイプに分類。目的・仲間・計画・リスクの4軸で診断します。">
 <meta property="og:url" content="https://mountain-mbti.vercel.app/">
 <meta property="og:image" content="https://mountain-mbti.vercel.app/og.png">
 <meta property="og:image:width" content="1200">
@@ -21,7 +21,7 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="登山タイプ診断｜16 TYPES OF HIKERS">
-<meta name="twitter:description" content="12の質問で、あなたの登山スタイルを16タイプに分類。">
+<meta name="twitter:description" content="14の質問で、あなたの登山スタイルを16タイプに分類。">
 <meta name="twitter:image" content="https://mountain-mbti.vercel.app/og.png">
 
 <meta name="theme-color" content="#1E3A31">
@@ -39,22 +39,17 @@
   <section id="screen-start" class="screen is-active">
     <div class="hero">
       <div class="cast" id="cast-top"><!-- 孤峰・稜線 --></div>
-      <svg class="hero-mountains" viewBox="0 0 320 140" aria-hidden="true">
-        <path class="mt back" d="M0 130 L70 40 L110 90 L160 20 L215 95 L260 55 L320 130 Z"/>
-        <path class="mt front" d="M0 140 L55 75 L95 115 L150 55 L210 130 L250 95 L320 140 Z"/>
-        <circle class="sun" cx="262" cy="30" r="14"/>
-        <path class="snow" d="M150 55 L162 72 L155 70 L148 78 L141 68 Z"/>
-      </svg>
       <h1 class="hero-title">登山タイプ診断</h1>
       <p class="hero-beta"><span class="beta">試作版</span></p>
       <p class="hero-en"><b>16</b> TYPES OF HIKERS</p>
       <p class="hero-lead">
-        12の質問に、AとBで近いほうを選ぶだけ。<br>
+        <span id="lead-count">14</span>の質問に、AとBで近いほうを選ぶだけ。<br>
         あなたの登山スタイルを<strong>16タイプ</strong>に分類。<br>
-        目的・仲間・計画・リスクの4つの軸から、あなたらしい山との付き合い方が見えてきます！
+        <strong>目的 × 仲間 × 計画 × リスク</strong><br>
+        4つの軸から、あなたらしい山との付き合い方が見えてきます！
       </p>
       <button class="btn btn-primary" id="btn-start">診断をはじめる</button>
-      <p class="hero-note">所要時間 約2分・全14問</p>
+      <p class="hero-note">所要時間 約2分・全<span id="note-count">14</span>問</p>
       <p class="hero-link">
         <a href="about.html">診断の仕組み</a>
         <a href="types.html?g=PS">16タイプの一覧を見る</a>
@@ -154,12 +149,12 @@
         <p class="panel-body" id="result-caution"></p>
       </section>
 
-      <div class="axes" id="result-axes"><!-- 4軸バー --></div>
-
       <section class="panel">
         <h3 class="panel-title">一緒に登ると面白い相手</h3>
         <div class="match-row" id="result-match"><!-- 相性3件 --></div>
       </section>
+
+      <div class="axes" id="result-axes"><!-- 4軸バー --></div>
 
       <div class="result-actions">
         <a class="btn btn-share" id="btn-share" href="#" target="_blank" rel="noopener">

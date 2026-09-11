@@ -68,9 +68,12 @@ function showScreen(name) {
 /* ---------- スタート画面のキャラクター配置 ----------
    山のイラストの上に孤峰・稜線（高山）、ページ下部に静林・陽だまり（森）。
    系統ごとに帯を作り、それぞれの淡色を敷く */
+/* 問題数は QUIZ から取るので、問題を増減しても表示が自動で追従する */
 (() => {
-  const total = document.getElementById("progress-total");
-  if (total) total.textContent = QUIZ.length;
+  ["progress-total", "lead-count", "note-count"].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = QUIZ.length;
+  });
 })();
 
 function renderCast() {
