@@ -46,7 +46,7 @@ function showScreen(name) {
 
 /* ---------- スタート画面のキャラクター配置 ----------
    山のイラストの上に孤峰・稜線（高山）、ページ下部に静林・陽だまり（森）。
-   グループごとに帯を作り、それぞれの淡色を敷く */
+   系統ごとに帯を作り、それぞれの淡色を敷く */
 function renderCast() {
   if (typeof characterSVG !== "function") return;
   const codes = Object.keys(TYPES);
@@ -300,7 +300,7 @@ function showResult() {
   $("#result-features").textContent = type.features;
   $("#result-caution").textContent = type.caution;
 
-  // 4軸のタグ（Pピークハント / Gグループ …）
+  // 4軸のタグ（Pピークハント / G系統 …）
   $("#result-axtags").innerHTML = code.split("").map((ch, i) => {
     const ax = AXES[i];
     const isFirst = ch === ax.a;

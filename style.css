@@ -876,76 +876,113 @@ body {
 .match-link:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
 
 /* =========================================================
-   紹介ページ：4軸の解説（左右対比）
+   仕組みのページ：4軸の解説（左右対比）
    ========================================================= */
-.axis-table { margin-top: 16px; }
-.ax-item { padding: 14px 0; border-top: 1px solid var(--line); }
+.axis-table { margin-top: 14px; }
+.ax-item { padding: 15px 0; border-top: 1px solid #EAEEEB; }
 .ax-item:first-child { border-top: none; padding-top: 4px; }
 
-.ax-head { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
-.ax-pos {
+.ax-row { display: flex; align-items: center; gap: 10px; }
+.ax-end { flex-shrink: 0; width: 74px; text-align: center; }
+.ax-ltr {
+  display: block;
+  font-family: "Outfit", var(--font);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: .95;
+}
+.ax-end.l .ax-ltr { color: var(--pine); }
+.ax-end.r .ax-ltr { color: var(--fjord); }
+.ax-word {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  margin-top: 5px;
+  line-height: 1.35;
+  color: var(--stone);
+}
+.ax-mid { flex: 1; min-width: 0; text-align: center; }
+.ax-title {
+  display: block;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .14em;
+  color: #3d4d46;
+  margin-bottom: 6px;
+}
+.ax-arrow { display: block; width: 100%; height: 12px; }
+.ax-memo {
+  font-size: 11.5px;
+  color: var(--stone);
+  margin-top: 10px;
+  line-height: 1.65;
+  text-align: center;
+}
+
+/* =========================================================
+   仕組みのページ：4系統のマトリクス
+   ========================================================= */
+.matrix { margin: 6px 0 4px; }
+.mx-axis {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  color: var(--stone);
+  text-align: center;
+}
+.mx-top { margin-bottom: 7px; }
+.mx-bottom { margin-top: 7px; }
+.mx-mid { display: flex; align-items: stretch; gap: 6px; }
+.mx-left, .mx-right {
+  flex-shrink: 0;
+  align-self: center;
+  width: 15px;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: .06em;
+  line-height: 1;
+}
+.mx-grid {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+}
+.mx-cell {
+  display: block;
+  border-radius: 16px;
+  padding: 11px 9px 10px;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+}
+.mx-cell:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+.mx-name { display: block; font-size: 16px; font-weight: 900; letter-spacing: .04em; }
+.mx-lead {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #3d4d46;
+  margin-top: 1px;
+  line-height: 1.5;
+  text-wrap: balance;
+}
+.mx-chars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin: 7px 0 5px;
+}
+.mx-chars svg { width: 100%; height: auto; display: block; }
+.mx-code {
+  display: block;
   font-family: "Outfit", var(--font);
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: .06em;
+  letter-spacing: .08em;
   color: var(--stone);
-  background: #F0F3F1;
-  border-radius: 4px;
-  padding: 2px 6px;
 }
-.ax-name { font-size: 13.5px; font-weight: 900; }
-
-.ax-pair { display: flex; align-items: stretch; gap: 9px; }
-.ax-side {
-  flex: 1;
-  min-width: 0;
-  text-align: center;
-  border-radius: 12px;
-  padding: 9px 6px 8px;
-}
-.ax-side.l { background: #EAF0EC; }
-.ax-side.r { background: #EAF0F5; }
-.ax-ltr {
-  font-family: "Outfit", var(--font);
-  font-size: 17px;
-  font-weight: 700;
-  line-height: 1;
-  display: inline-block;
-  border-radius: 6px;
-  padding: 4px 9px;
-  color: #fff;
-}
-.ax-side.l .ax-ltr { background: var(--pine); }
-.ax-side.r .ax-ltr { background: var(--fjord); }
-.ax-word { font-size: 12.5px; font-weight: 700; margin-top: 6px; line-height: 1.4; }
-.ax-side.l .ax-word { color: var(--pine); }
-.ax-side.r .ax-word { color: #2E4B60; }
-.ax-vs { align-self: center; font-size: 10.5px; color: #C3CFC8; font-weight: 700; }
-
-.ax-bar { display: flex; height: 5px; border-radius: 999px; overflow: hidden; margin-top: 9px; }
-.ax-bar i { flex: 1; }
-.ax-bar i:first-child { background: var(--pine); }
-.ax-bar i:last-child { background: var(--fjord); }
-.ax-memo { font-size: 12px; color: var(--stone); margin-top: 8px; line-height: 1.7; text-align: center; }
-
-.group-table { display: grid; gap: 8px; margin-top: 12px; }
-.gr-row {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 11px 13px;
-  border-radius: 13px;
-  text-decoration: none;
-  color: inherit;
-}
-.gr-row:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
-.gr-mark { width: 8px; height: 34px; border-radius: 999px; flex-shrink: 0; }
-.gr-body { display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px 9px; }
-.gr-name { font-size: 15px; font-weight: 900; }
-.gr-lead { font-size: 12.5px; color: #3d4d46; }
-.gr-axis { font-size: 11.5px; color: var(--stone); flex-basis: 100%; }
-
-.legend-plain { margin-bottom: 14px; }
 
 /* =========================================================
    結果画面：ヒーロー帯と波の区切り

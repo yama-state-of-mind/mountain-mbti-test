@@ -18,13 +18,13 @@
   <header class="list-head">
     <h1>16タイプの詳細</h1>
     <p class="list-en"><b>16</b> TYPES OF HIKERS</p>
-    <p>グループを選んで、4タイプずつ見られます。</p>
+    <p>系統を選んで、4タイプずつ見られます。</p>
   </header>
 
   <!-- ========== 入口：仕組みの解説 ========== -->
-  <!-- ========== グループ別の詳細 ========== -->
+  <!-- ========== 系統別の詳細 ========== -->
   <div id="detail">
-    <nav class="group-tabs" id="group-tabs" aria-label="グループの切り替え"></nav>
+    <nav class="group-tabs" id="group-tabs" aria-label="系統の切り替え"></nav>
     <div id="group-body"></div>
   </div>
 
@@ -38,13 +38,13 @@
 <script>
 /* =========================================================
    16タイプ一覧
-   入口では仕組みの解説だけを見せ、グループを選ぶと詳細に切り替わる。
-   URLは ?g=PS でグループ指定、#PSLC でタイプ指定に対応。
+   入口では仕組みの解説だけを見せ、系統を選ぶと詳細に切り替わる。
+   URLは ?g=PS で系統指定、#PSLC でタイプ指定に対応。
    ========================================================= */
 const ORDER = ["PS", "PG", "ES", "EG"];
 const codesOf = (key) => Object.keys(TYPES).filter((c) => c.slice(0, 2) === key);
 
-/* ---------- グループ切り替えタブ ---------- */
+/* ---------- 系統切り替えタブ ---------- */
 document.getElementById("group-tabs").innerHTML = ORDER.map((key) => {
   const g = GROUPS[key];
   return `<button class="gtab" data-g="${key}">
@@ -174,7 +174,7 @@ function showGroup(key, anchor) {
 }
 
 /* ---------- URLから初期表示を決める ----------
-   ?g=PS があればそのグループ。なければ #PSLC のアンカーから逆引きする */
+   ?g=PS があればその系統。なければ #PSLC のアンカーから逆引きする */
 function routeFromURL() {
   const q = new URLSearchParams(location.search).get("g");
   const hash = (location.hash || "").slice(1);
@@ -186,7 +186,7 @@ function routeFromURL() {
 }
 
 /* ---------- 操作 ---------- */
-/* ---------- グループ切り替えタブ ---------- */
+/* ---------- 系統切り替えタブ ---------- */
 document.getElementById("group-tabs").innerHTML = ORDER.map((key) => {
   const g = GROUPS[key];
   return `<button class="gtab" data-g="${key}">
@@ -316,7 +316,7 @@ function showGroup(key, anchor) {
 }
 
 /* ---------- URLから初期表示を決める ----------
-   ?g=PS があればそのグループ。なければ #PSLC のアンカーから逆引きする */
+   ?g=PS があればその系統。なければ #PSLC のアンカーから逆引きする */
 function routeFromURL() {
   const q = new URLSearchParams(location.search).get("g");
   const hash = (location.hash || "").slice(1);
@@ -335,7 +335,7 @@ document.getElementById("group-tabs").addEventListener("click", (e) => {
   showGroup(tab.dataset.g);
 });
 
-/* 詳細内の相性リンクは、別グループなら切り替えてから移動する */
+/* 詳細内の相性リンクは、別系統なら切り替えてから移動する */
 document.getElementById("group-body").addEventListener("click", (e) => {
   const link = e.target.closest(".match");
   if (!link) return;

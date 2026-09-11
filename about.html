@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>診断の仕組み｜登山タイプ診断</title>
-<meta name="description" content="4つのアルファベットの意味と、16タイプが分かれる4つのグループについて説明します。">
+<meta name="description" content="4つのアルファベットの意味と、16タイプが分かれる4つの系統について説明します。">
 <meta name="theme-color" content="#1E3A31">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
   <header class="list-head">
     <h1>診断の仕組み</h1>
     <p class="list-en"><b>16</b> TYPES OF HIKERS</p>
-    <p>4つのアルファベットの意味と、16タイプが分かれるグループを説明します。</p>
+    <p>4つのアルファベットの意味と、16タイプが分かれる4つの系統を説明します。</p>
   </header>
 
     <section class="legend">
@@ -28,11 +28,19 @@
     </section>
 
     <section class="legend legend-plain">
-      <h2>16タイプは4つのグループに分かれます</h2>
-      <p>最初の2文字、つまり<b>目的</b>と<b>仲間</b>の組み合わせで、16タイプは大きく4つに分かれます。見たいグループを選んでください。</p>
+      <h2>16タイプは4つの系統に分かれます</h2>
+      <p>最初の2文字、つまり<b>目的</b>と<b>仲間</b>の組み合わせで、16タイプは大きく4つに分かれます。見たい系統を選んでください。</p>
     </section>
 
-    <div class="group-cards" id="group-cards"></div>
+    <div class="matrix">
+      <p class="mx-axis mx-top">高山・ピークハント</p>
+      <div class="mx-mid">
+        <p class="mx-axis mx-left">ソロ</p>
+        <div class="mx-grid" id="matrix"></div>
+        <p class="mx-axis mx-right">グループ</p>
+      </div>
+      <p class="mx-axis mx-bottom">森・エンジョイ</p>
+    </div>
 
   <p class="list-foot hero-link"><a href="types.html?g=PS">16タイプの詳細を見る</a></p>
   <p class="list-foot hero-link"><a href="index.html">診断をはじめる</a></p>
@@ -42,7 +50,7 @@
 <script src="data.js"></script>
 <script src="characters.js"></script>
 <script>
-/* 診断の仕組みのページ。4軸の解説と、4グループのカードを組み立てる */
+/* 診断の仕組みのページ。4軸の解説と、4系統のカードを組み立てる */
 const ORDER = ["PS", "PG", "ES", "EG"];
 const codesOf = (key) => Object.keys(TYPES).filter((c) => c.slice(0, 2) === key);
 
@@ -52,32 +60,40 @@ const AXIS_MEMO = {
   LF: "数字と情報で組み立てるか、その日の感覚で決めるか",
   CA: "備えを厚くして安全側に振るか、身軽に踏み込むか",
 };
-document.getElementById("axis-table").innerHTML = AXES.map((ax, i) => `
-  <div class="ax-row">
-    <span class="ax-pos">${i + 1}文字目</span>
-    <div class="ax-main">
-      <p class="ax-title">${ax.title}</p>
-      <p class="ax-pair"><b>${ax.a}</b> ${ax.aName}　／　<b>${ax.b}</b> ${ax.bName}</p>
-      <p class="ax-memo">${AXIS_MEMO[ax.id]}</p>
+document.getElementById("axis-table").innerHTML = AXES.map((ax) => `
+  <div class="ax-item">
+    <div class="ax-row">
+      <div class="ax-end l">
+        <span class="ax-ltr">${ax.a}</span>
+        <span class="ax-word">${ax.aName}</span>
+      </div>
+      <div class="ax-mid">
+        <span class="ax-title">${ax.title}</span>
+        <svg class="ax-arrow" viewBox="0 0 120 12" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M14 6 H106" stroke="#C3CFC8" stroke-width="1.6"/>
+          <path d="M2 6 L14 1.6 L14 10.4 Z" fill="#1E3A31"/>
+          <path d="M118 6 L106 1.6 L106 10.4 Z" fill="#46708F"/>
+        </svg>
+      </div>
+      <div class="ax-end r">
+        <span class="ax-ltr">${ax.b}</span>
+        <span class="ax-word">${ax.bName}</span>
+      </div>
     </div>
+    <p class="ax-memo">${AXIS_MEMO[ax.id]}</p>
   </div>`).join("");
 
-document.getElementById("group-cards").innerHTML = ORDER.map((key) => {
+/* 目的（縦）× 仲間（横）の4象限。左上から 孤峰・稜線・静林・陽だまり */
+document.getElementById("matrix").innerHTML = ORDER.map((key) => {
   const g = GROUPS[key];
   return `
-    <a class="gcard" href="types.html?g=${key}" style="background:${g.band}">
-      <span class="gcard-bg" style="color:${g.deep}">${g.name}</span>
-      <span class="gcard-head">
-        <span class="gcard-name" style="color:${g.deep}">${g.name}</span>
-        <span class="gcard-lead">${g.lead}</span>
-      </span>
-      <span class="gcard-chars">
+    <a class="mx-cell" href="types.html?g=${key}" style="background:${g.band}">
+      <span class="mx-name" style="color:${g.deep}">${g.name}</span>
+      <span class="mx-lead">${g.lead}</span>
+      <span class="mx-chars">
         ${codesOf(key).map((c) => characterSVG(c, "char", true)).join("")}
       </span>
-      <span class="gcard-foot">
-        <span class="gcard-axis">${g.axis}</span>
-        <span class="gcard-code">${key}＊＊</span>
-      </span>
+      <span class="mx-code">${key}＊＊</span>
     </a>`;
 }).join("");
 </script>
