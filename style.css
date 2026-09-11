@@ -581,7 +581,7 @@ body {
   margin-top: 18px;
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 10px;
 }
 .result .hero-link { margin-top: 20px; }
@@ -594,8 +594,9 @@ body {
   background: var(--paper);
   border: 1.5px solid #C3D5E0;
   border-radius: 999px;
-  padding: 8px 18px;
+  padding: 8px 16px;
   line-height: 1.4;
+  white-space: nowrap;
   transition: background .15s, border-color .15s;
 }
 .hero-link a:hover { background: #EDF3F7; border-color: var(--fjord); }
@@ -1446,3 +1447,56 @@ body {
   margin-left: 8px;
   vertical-align: 1px;
 }
+
+/* =========================================================
+   結果ページ上部：横並び（案E）
+   ========================================================= */
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  margin-top: 6px;
+}
+.result-row .result-char { margin: 0; flex-shrink: 0; }
+.result-row .result-char .char-lg { width: 128px; display: block; }
+.result-txt { flex: 1; min-width: 0; }
+.result-row .result-animal { font-size: 27px; margin: 0; line-height: 1.25; }
+.result.is-secret .result-row .result-animal { font-size: 21px; }
+.result-row .result-name { font-size: 12.5px; margin-top: 1px; }
+.result-row .result-copy {
+  font-size: 12.5px;
+  margin: 7px 0 0;
+  padding: 0;
+  text-align: left;
+  line-height: 1.6;
+}
+.result-id { margin-top: 12px; }
+.result-code { font-size: 10.5px; padding: 3px 7px 3px 10px; border-radius: 5px; }
+.result-group { font-size: 11px; }
+.result-axtags { margin-top: 10px; grid-template-columns: repeat(4, auto); gap: 4px; }
+.result-axtags span { font-size: 10px; padding: 4px 8px; white-space: nowrap; }
+.result-item { font-size: 10.5px; padding: 4px 12px; margin-top: 8px; }
+@media (max-width: 380px) {
+  .result-row .result-char .char-lg { width: 112px; }
+  .result-row .result-animal { font-size: 24px; }
+}
+
+/* 詳細カード：コードと生息エリアを横並びの下へ */
+.ti-id { text-align: center; margin-top: 12px; }
+.tc-area { margin-left: 8px; vertical-align: 1px; }
+
+/* おすすめの山と相性の文字を少し大きく */
+.type-item .mt-row,
+.result .match-row,
+.type-item .match-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+.type-item .mt { background: #F2F5F3; border-radius: 12px; padding: 10px 8px 11px; }
+.type-item .mt-name, .result .mt-name { font-size: 13.5px; font-weight: 900; text-align: center; line-height: 1.45; }
+.type-item .mt-why, .result .mt-why { font-size: 11.5px; color: #4a5a52; margin-top: 5px; line-height: 1.75; }
+.type-item .mt-note, .result .mt-note { font-size: 11.5px; margin-top: 11px; line-height: 1.8; }
+.result .match-row .match-why,
+.type-item .match-row .match-why { font-size: 11.5px; line-height: 1.8; }
+.result .match-row .match-name,
+.type-item .match-row .match-name { font-size: 13.5px; }
+.result .match-row .match-label,
+.type-item .match-row .match-label { font-size: 11px; }
