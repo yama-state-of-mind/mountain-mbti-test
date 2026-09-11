@@ -33,13 +33,22 @@
     </section>
 
     <div class="matrix">
-      <p class="mx-axis mx-top">高山・ピークハント</p>
+      <p class="mx-axis mx-top"><b>P</b>高山・ピークハント</p>
       <div class="mx-mid">
-        <p class="mx-axis mx-left">ソロ</p>
-        <div class="mx-grid" id="matrix"></div>
-        <p class="mx-axis mx-right">グループ</p>
+        <p class="mx-axis mx-left"><b>S</b>ソロ</p>
+        <div class="mx-grid" id="matrix">
+          <svg class="mx-cross" viewBox="0 0 300 300" aria-hidden="true">
+            <path d="M150 14 V286" stroke="#AFC3CF" stroke-width="2.4"/>
+            <path d="M14 150 H286" stroke="#AFC3CF" stroke-width="2.4"/>
+            <path d="M150 6 L144 18 L156 18 Z" fill="#AFC3CF"/>
+            <path d="M150 294 L144 282 L156 282 Z" fill="#AFC3CF"/>
+            <path d="M6 150 L18 144 L18 156 Z" fill="#AFC3CF"/>
+            <path d="M294 150 L282 144 L282 156 Z" fill="#AFC3CF"/>
+          </svg>
+        </div>
+        <p class="mx-axis mx-right"><b>G</b>グループ</p>
       </div>
-      <p class="mx-axis mx-bottom">森・エンジョイ</p>
+      <p class="mx-axis mx-bottom"><b>E</b>森・エンジョイ</p>
     </div>
 
   <p class="list-foot hero-link"><a href="types.html?g=PS">16タイプの詳細を見る</a></p>
@@ -84,10 +93,11 @@ document.getElementById("axis-table").innerHTML = AXES.map((ax) => `
   </div>`).join("");
 
 /* 目的（縦）× 仲間（横）の4象限。左上から 孤峰・稜線・静林・陽だまり */
-document.getElementById("matrix").innerHTML = ORDER.map((key) => {
+document.getElementById("matrix").insertAdjacentHTML("beforeend", ORDER.map((key) => {
   const g = GROUPS[key];
   return `
     <a class="mx-cell" href="types.html?g=${key}" style="background:${g.band}">
+      <span class="mx-bg" style="color:${g.deep}">${g.name}</span>
       <span class="mx-name" style="color:${g.deep}">${g.name}</span>
       <span class="mx-lead">${g.lead}</span>
       <span class="mx-chars">
@@ -95,7 +105,7 @@ document.getElementById("matrix").innerHTML = ORDER.map((key) => {
       </span>
       <span class="mx-code">${key}＊＊</span>
     </a>`;
-}).join("");
+}).join(""));
 </script>
 </body>
 </html>

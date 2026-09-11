@@ -530,7 +530,7 @@ EGFA: { animal: "ノウサギ", item: "自撮り棒つきスマホ", svg: `
 const GROUPS = {
   PS: { name: "孤峰",   lead: "自分の足で、頂へ"     , axis: "ピークハント × ソロ",
         band: "#E3EBF0", circle: "#E3EDF3", deep: "#3E5C6E" },
-  PG: { name: "連峰",   lead: "仲間と、峰から峰へ"   , axis: "ピークハント × グループ",
+  PG: { name: "稜線",   lead: "仲間と、尾根づたいに", axis: "ピークハント × グループ",
         band: "#F3E6E1", circle: "#F5E7E1", deep: "#B5533A" },
   ES: { name: "樹林帯", lead: "静かな森を、ひとりで"  , axis: "エンジョイ × ソロ",
         band: "#E2ECE4", circle: "#E1EDE5", deep: "#4E7A57" },
