@@ -294,6 +294,7 @@ function showResult() {
   const ch = CHARACTERS[code];
   $("#result-char").innerHTML = characterSVG(code, "char char-lg");
   $("#result-animal").textContent = ch ? ch.animal : type.name;
+  $("#result-item").innerHTML = ch ? `<b>持ちもの</b>${ch.item}` : "";
   $("#result-name").textContent = type.name;
   $("#result-copy").textContent = "「" + type.copy + "」";
   $("#result-features").textContent = type.features;
