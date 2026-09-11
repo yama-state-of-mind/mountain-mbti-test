@@ -25,28 +25,31 @@ function shuffleQuestions(list) {
   return list.slice(); // 条件を満たす並びが見つからなかった場合
 }
 
-/* ---------- シークレット問題の差し込み ----------
-   SECRET_RATE の確率で1つ選び、同じ軸の問題1つと入れ替える。
-   入れ替えた問題には secret を付けておき、判定時に見る */
-function injectSecret(list) {
-  if (typeof SECRETS === "undefined" || Math.random() >= SECRET_RATE) return list;
+/* ---------- 出題リストの組み立て ----------
+   軸を持つ12問をシャッフルし、そこへ軸なしのシークレット専用2問を混ぜる。
+   専用2問は判定に使わないので、同じ軸が隣り合わない制約の対象外 */
+function buildQuiz() {
+  const list = shuffleQuestions(QUESTIONS);
+  if (typeof SECRETS === "undefined") return list;
 
-  const sec = SECRETS[Math.floor(Math.random() * SECRETS.length)];
-  const targets = list
-    .map((q, i) => (q.axis === sec.axis ? i : -1))
-    .filter((i) => i >= 0);
-  if (!targets.length) return list;
+  // 端と端に寄りすぎないよう、前半と後半に1問ずつ散らす
+  const half = Math.ceil(list.length / 2);
+  const slots = [
+    1 + Math.floor(Math.random() * (half - 1)),
+    half + 1 + Math.floor(Math.random() * (list.length - half - 1)),
+  ];
+  const picks = SECRETS.map((x) => x.question).sort(() => Math.random() - 0.5);
 
-  const at = targets[Math.floor(Math.random() * targets.length)];
   const out = list.slice();
-  out[at] = { ...sec.question, secret: sec.id };
+  out.splice(slots[1], 0, picks[1]);
+  out.splice(slots[0], 0, picks[0]);
   return out;
 }
 
-let QUIZ = injectSecret(shuffleQuestions(QUESTIONS));
+let QUIZ = buildQuiz();
 const answers = new Array(QUESTIONS.length).fill(null); // 0〜5（0=A強, 5=B強）
 let currentPage = 0;
-const totalPages = Math.ceil(QUESTIONS.length / QUESTIONS_PER_PAGE);
+const totalPages = Math.ceil(QUIZ.length / QUESTIONS_PER_PAGE);
 
 const $ = (sel) => document.querySelector(sel);
 const screens = {
@@ -260,36 +263,59 @@ function flipAxis(code, axisIndex) {
   return chars.join("");
 }
 
-function findMatches(code) {
-  return [
+function findMatches(code, secret) {
+  const list = [
     { label: "息が合う相手",     code: flipAxis(code, 2), why: "計画の立て方が逆どうし。抜けを補い合えます" },
     { label: "刺激をくれる相手", code: flipAxis(code, 0), why: "登り方は近いのに、山に求めるものが違います" },
   ];
+
+  if (secret) {
+    // シークレットのときは3人目に同じタイプの通常の姿が出る
+    list.push({
+      label: "相性は文句なし",
+      code: code,
+      why: "同じ山を選び、同じ場所で足を止めます",
+      normal: true,
+    });
+  } else {
+    // 目的と仲間の両方が逆の相手。相手から見てもあなたが出る
+    const opposite = flipAxis(flipAxis(code, 0), 1);
+    list.push({
+      label: "山の見方が正反対の相手",
+      code: opposite,
+      why: (typeof OPPOSITE_WHY !== "undefined" && OPPOSITE_WHY[code]) || "",
+    });
+  }
+  return list;
 }
 
 /* ---------- 判定ロジック ----------
-   選択肢A側（0,1,2）は重み3,2,1／選択肢B側（3,4,5）は重み1,2,3。
-   rev が true の質問は、選択肢Aが2文字目側を指すため向きを反転させる。 */
+   6段階の回答を「1文字目側に何%寄っているか」に変換して平均する。
+     v=0 → 100%  v=1 → 80%  v=2 → 60%
+     v=3 →  40%  v=4 → 20%  v=5 →  0%
+   rev が true の質問は、選択肢Aが2文字目側を指すため向きを反転させる。
+   こうすると「どちらかといえばA」を3回選んでも60%にとどまり、
+   100%は3問すべてで端を選んだときにだけ出る。 */
 function calcResult() {
-  const score = {};
-  AXES.forEach((ax) => (score[ax.id] = { a: 0, b: 0 }));
+  const share = {};
+  AXES.forEach((ax) => (share[ax.id] = []));
 
   QUIZ.forEach((q, i) => {
+    if (!q.axis) return;                            // シークレット専用の問題は判定に使わない
     const v = answers[i];
-    const weight = v <= 2 ? 3 - v : v - 2;
-    const pickedOptionA = v <= 2;
-    const scoresFirstLetter = q.rev ? !pickedOptionA : pickedOptionA;
-    if (scoresFirstLetter) score[q.axis].a += weight;
-    else score[q.axis].b += weight;
+    const towardOptionA = ((5 - v) / 5) * 100;      // 選択肢Aへの寄り
+    const towardFirstLetter = q.rev ? 100 - towardOptionA : towardOptionA;
+    share[q.axis].push(towardFirstLetter);
   });
 
   let code = "";
   const detail = [];
   AXES.forEach((ax) => {
-    const s = score[ax.id];
-    const total = s.a + s.b;
-    const aPct = Math.round((s.a / total) * 100);
-    const aWins = s.a >= s.b; // 同点は1文字目側に倒す
+    const list = share[ax.id];
+    const aPct = list.length
+      ? Math.round(list.reduce((sum, x) => sum + x, 0) / list.length)
+      : 50;
+    const aWins = aPct >= 50;                        // 同点は1文字目側に倒す
     code += aWins ? ax.a : ax.b;
     detail.push({ ...ax, aPct, bPct: 100 - aPct, aWins });
   });
@@ -297,8 +323,8 @@ function calcResult() {
 }
 
 /* ---------- シークレットの判定 ----------
-   出題されたシークレット問題で最も強い側（端）を選び、
-   かつ結果が対象の系統だったときだけ成立する */
+   専用問題でAの端（いちばん強い回答）を選び、
+   かつ結果が code と完全一致したときだけ成立する */
 function findSecret(code) {
   if (typeof SECRETS === "undefined") return null;
 
@@ -306,13 +332,8 @@ function findSecret(code) {
     const id = QUIZ[i].secret;
     if (!id) continue;
     const sec = SECRETS.find((x) => x.id === id);
-    if (!sec) continue;
-    if (code !== sec.code) continue;
-
-    const v = answers[i];
-    const hitA = sec.hit === "a" && v === 0;   // 選択肢A側のいちばん端
-    const hitB = sec.hit === "b" && v === 5;   // 選択肢B側のいちばん端
-    if (hitA || hitB) return sec;
+    if (!sec || code !== sec.code) continue;
+    if (answers[i] === 0) return sec;               // 選択肢A側のいちばん端
   }
   return null;
 }
@@ -356,7 +377,7 @@ function showResult() {
       <b>${ch}</b>${isFirst ? ax.aName : ax.bName}</span>`;
   }).join("");
 
-  $("#result-match").innerHTML = findMatches(code)
+  $("#result-match").innerHTML = findMatches(code, secret)
     .map((m) => {
       const t = TYPES[m.code] || { name: "—" };
       const mc = CHARACTERS[m.code];
@@ -392,7 +413,7 @@ function showResult() {
         <div class="axis-track">
           <div class="axis-bar ${d.aWins ? "side-a" : "side-b"}" style="width:${winPct}%"></div>
         </div>
-        <p class="axis-pct">${winChar}（${winName}）${winPct}%</p>
+        <p class="axis-pct">${winChar}（${winName}）<b>${winPct}%</b></p>
       </div>`;
     })
     .join("");
@@ -443,6 +464,6 @@ function revealResult() {
 $("#btn-retry").addEventListener("click", () => {
   answers.fill(null);
   currentPage = 0;
-  QUIZ = injectSecret(shuffleQuestions(QUESTIONS)); // 順番とシークレットを引き直す
+  QUIZ = buildQuiz(); // 順番を引き直す
   showScreen("start");
 });

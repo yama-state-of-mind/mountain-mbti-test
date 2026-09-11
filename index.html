@@ -45,7 +45,8 @@
         <circle class="sun" cx="262" cy="30" r="14"/>
         <path class="snow" d="M150 55 L162 72 L155 70 L148 78 L141 68 Z"/>
       </svg>
-      <h1 class="hero-title">登山タイプ診断<span class="beta">試作版</span></h1>
+      <h1 class="hero-title">登山タイプ診断</h1>
+      <p class="hero-beta"><span class="beta">試作版</span></p>
       <p class="hero-en"><b>16</b> TYPES OF HIKERS</p>
       <p class="hero-lead">
         12の質問に、AとBで近いほうを選ぶだけ。<br>
@@ -53,10 +54,10 @@
         目的・仲間・計画・リスクの4つの軸から、あなたらしい山との付き合い方が見えてきます！
       </p>
       <button class="btn btn-primary" id="btn-start">診断をはじめる</button>
-      <p class="hero-note">所要時間 約2分・全12問</p>
+      <p class="hero-note">所要時間 約2分・全14問</p>
       <p class="hero-link">
-        <a href="types.html?g=PS">16タイプの一覧を見る</a>
         <a href="about.html">診断の仕組み</a>
+        <a href="types.html?g=PS">16タイプの一覧を見る</a>
       </p>
       <div class="cast" id="cast-bottom"><!-- 静林・陽だまり --></div>
     </div>
@@ -123,23 +124,21 @@
     <div class="result">
       <div class="result-hero" id="result-hero">
         <p class="result-eyebrow">あなたの登山タイプは</p>
-        <p class="result-id">
-          <span class="result-code" id="result-code"></span>
-          <span class="result-group" id="result-group"></span>
-          <span class="secret-badge" id="secret-badge" hidden>SECRET</span>
-        </p>
-        <div class="result-char" id="result-char"><!-- キャラクター --></div>
         <h2 class="result-animal" id="result-animal"></h2>
         <p class="result-name" id="result-name"></p>
         <p class="result-copy" id="result-copy"></p>
+        <div class="result-char" id="result-char"><!-- キャラクター --></div>
+        <p class="result-id">
+          <span class="result-group" id="result-group"></span>
+          <span class="result-code" id="result-code"></span>
+          <span class="secret-badge" id="secret-badge" hidden>SECRET</span>
+        </p>
         <div class="result-axtags" id="result-axtags"><!-- 4軸のタグ --></div>
         <p class="result-item" id="result-item"></p>
         <p class="secret-note" id="secret-note" hidden></p>
         <svg class="ridge-cut" viewBox="0 0 400 58" preserveAspectRatio="none" aria-hidden="true">
-          <!-- 奥の稜線 -->
           <path class="rc-back"
                 d="M0 58 L0 34 L46 20 L88 32 L140 2 L196 30 L238 18 L286 34 L336 8 L376 24 L400 18 L400 58 Z"/>
-          <!-- 手前の稜線（ページ背景と同じ色でくり抜く） -->
           <path class="rc-front"
                 d="M0 58 L0 46 L54 30 L104 44 L162 18 L214 42 L258 32 L308 46 L358 26 L400 38 L400 58 Z"/>
         </svg>
@@ -168,7 +167,10 @@
           結果をシェアする
         </a>
         <button class="btn btn-ghost" id="btn-retry">もう一度診断する</button>
-        <p class="hero-link"><a href="types.html?g=PS">16タイプすべてを見る</a></p>
+        <p class="hero-link">
+          <a href="about.html">診断の仕組み</a>
+          <a href="types.html?g=PS">16タイプの一覧を見る</a>
+        </p>
       </div>
     </div>
   </section>

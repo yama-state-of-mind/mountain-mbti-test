@@ -61,9 +61,12 @@ function flipAxis(code, axisIndex) {
   return chars.join("");
 }
 function findMatches(code) {
+  const opposite = flipAxis(flipAxis(code, 0), 1);
   return [
     { label: "息が合う相手", code: flipAxis(code, 2), why: "計画の立て方が逆どうし。抜けを補い合えます" },
     { label: "刺激をくれる相手", code: flipAxis(code, 0), why: "登り方は近いのに、山に求めるものが違います" },
+    { label: "山の見方が正反対の相手", code: opposite,
+      why: (typeof OPPOSITE_WHY !== "undefined" && OPPOSITE_WHY[code]) || "" },
   ];
 }
 
@@ -83,16 +86,12 @@ function typeCard(code) {
     if (!mt) return "";
     return `
       <a class="match" href="#${m.code}" style="background:${groupOf(m.code).band}">
+        <span class="match-label">${m.label}</span>
         ${characterSVG(m.code, "char char-sm")}
-        <span class="match-body">
-          <span class="match-label">${m.label}</span>
-          <span class="match-name">
-            <span class="match-code" style="background:${groupOf(m.code).deep}">${m.code}</span>
-            ${mc ? mc.animal : mt.name}
-          </span>
-          <span class="match-type">${mt.name}</span>
-          <span class="match-why">${m.why}</span>
-        </span>
+        <span class="match-code" style="background:${groupOf(m.code).deep}">${m.code}</span>
+        <span class="match-name">${mc ? mc.animal : mt.name}</span>
+        <span class="match-type">${mt.name}</span>
+        <span class="match-why">${m.why}</span>
       </a>`;
   }).join("");
 
@@ -123,7 +122,7 @@ function typeCard(code) {
 
       <section class="ti-block">
         <h4 class="ti-label">一緒に登ると面白い相手</h4>
-        ${matches}
+        <div class="match-row">${matches}</div>
       </section>
 
     </article>`;
@@ -203,9 +202,12 @@ function flipAxis(code, axisIndex) {
   return chars.join("");
 }
 function findMatches(code) {
+  const opposite = flipAxis(flipAxis(code, 0), 1);
   return [
     { label: "息が合う相手", code: flipAxis(code, 2), why: "計画の立て方が逆どうし。抜けを補い合えます" },
     { label: "刺激をくれる相手", code: flipAxis(code, 0), why: "登り方は近いのに、山に求めるものが違います" },
+    { label: "山の見方が正反対の相手", code: opposite,
+      why: (typeof OPPOSITE_WHY !== "undefined" && OPPOSITE_WHY[code]) || "" },
   ];
 }
 
@@ -225,16 +227,12 @@ function typeCard(code) {
     if (!mt) return "";
     return `
       <a class="match" href="#${m.code}" style="background:${groupOf(m.code).band}">
+        <span class="match-label">${m.label}</span>
         ${characterSVG(m.code, "char char-sm")}
-        <span class="match-body">
-          <span class="match-label">${m.label}</span>
-          <span class="match-name">
-            <span class="match-code" style="background:${groupOf(m.code).deep}">${m.code}</span>
-            ${mc ? mc.animal : mt.name}
-          </span>
-          <span class="match-type">${mt.name}</span>
-          <span class="match-why">${m.why}</span>
-        </span>
+        <span class="match-code" style="background:${groupOf(m.code).deep}">${m.code}</span>
+        <span class="match-name">${mc ? mc.animal : mt.name}</span>
+        <span class="match-type">${mt.name}</span>
+        <span class="match-why">${m.why}</span>
       </a>`;
   }).join("");
 
@@ -265,7 +263,7 @@ function typeCard(code) {
 
       <section class="ti-block">
         <h4 class="ti-label">一緒に登ると面白い相手</h4>
-        ${matches}
+        <div class="match-row">${matches}</div>
       </section>
 
     </article>`;
