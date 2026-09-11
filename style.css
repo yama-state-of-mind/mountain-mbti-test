@@ -985,7 +985,7 @@ body {
   z-index: 2;
   display: block;
   border-radius: 16px;
-  padding: 12px 11px 10px;
+  padding: 10px 11px 10px;
   text-decoration: none;
   color: inherit;
   text-align: left;
@@ -993,18 +993,22 @@ body {
 }
 .mx-cell:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
 /* 背景に薄く大きく系統名 */
+/* 系統名は薄い大文字のみ。左の2つは左上、右の2つは右上に置く */
 .mx-bg {
   position: absolute;
-  right: -6px;
-  top: -8px;
-  font-size: 42px;
+  top: 6px;
+  font-size: 30px;
   font-weight: 900;
   letter-spacing: .02em;
-  line-height: 1;
-  opacity: .14;
+  line-height: 1.05;
+  opacity: .2;
   white-space: nowrap;
   pointer-events: none;
 }
+.mx-l .mx-bg { left: 10px; }
+.mx-r .mx-bg { right: 10px; }
+.mx-r { text-align: right; }
+.mx-r .mx-code { text-align: left; }
 .mx-name {
   position: relative;
   display: block;
@@ -1018,7 +1022,7 @@ body {
   font-size: 10.5px;
   font-weight: 700;
   color: #3d4d46;
-  margin-top: 1px;
+  margin-top: 34px;
   line-height: 1.5;
   text-wrap: balance;
 }

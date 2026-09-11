@@ -96,9 +96,9 @@ document.getElementById("axis-table").innerHTML = AXES.map((ax) => `
 document.getElementById("matrix").insertAdjacentHTML("beforeend", ORDER.map((key) => {
   const g = GROUPS[key];
   return `
-    <a class="mx-cell" href="types.html?g=${key}" style="background:${g.band}">
+    <a class="mx-cell mx-${key === "PS" || key === "ES" ? "l" : "r"}"
+       href="types.html?g=${key}" style="background:${g.band}">
       <span class="mx-bg" style="color:${g.deep}">${g.name}</span>
-      <span class="mx-name" style="color:${g.deep}">${g.name}</span>
       <span class="mx-lead">${g.lead}</span>
       <span class="mx-chars">
         ${codesOf(key).map((c) => characterSVG(c, "char", true)).join("")}
