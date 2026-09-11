@@ -991,12 +991,21 @@ body {
   flex-direction: column;
   border-radius: 16px;
   padding: 10px 9px 10px;
-  text-decoration: none;
   color: inherit;
   text-align: left;
   overflow: hidden;
+  cursor: pointer;
 }
-.mx-cell:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+/* キャラクター1体ずつが個別のリンク */
+.mx-char {
+  display: block;
+  border-radius: 10px;
+  padding: 1px;
+  transition: background .15s;
+}
+.mx-char:hover { background: rgba(255, 255, 255, .55); }
+.mx-char:focus-visible { outline: 3px solid var(--sun); outline-offset: 1px; }
+.mx-char svg { display: block; width: 100%; height: auto; }
 /* 背景に薄く大きく系統名 */
 /* 系統名は薄い大文字のみ。左の2つは左上、右の2つは右上に置く */
 .mx-bg {
@@ -1329,3 +1338,78 @@ body {
   .result .match-row .match { padding: 9px 5px 10px; }
   .result .match-row .match-why { font-size: 10px; }
 }
+
+/* =========================================================
+   結果画面：おすすめの山
+   ========================================================= */
+.mt-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+.mt {
+  background: #F2F5F3;
+  border-radius: 14px;
+  padding: 11px 9px 12px;
+  text-align: left;
+}
+.mt-name {
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.45;
+  text-align: center;
+}
+.mt-flag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  color: #8a5a10;
+  background: #FBEFD8;
+  border-radius: 999px;
+  padding: 2px 7px;
+  margin-top: 3px;
+  white-space: nowrap;
+}
+.mt-why {
+  font-size: 10.5px;
+  color: #4a5a52;
+  margin-top: 6px;
+  line-height: 1.7;
+}
+.mt-note {
+  font-size: 11px;
+  color: var(--stone);
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  line-height: 1.75;
+  text-align: left;
+}
+@media (max-width: 400px) {
+  .mt-row { gap: 5px; }
+  .mt { padding: 9px 6px 10px; }
+  .mt-name { font-size: 12px; }
+  .mt-why { font-size: 10px; }
+}
+
+/* =========================================================
+   紹介ページ：隠れた姿への切り替え
+   ========================================================= */
+.ti-char-wrap { cursor: default; }
+.type-item.is-secret { box-shadow: 0 2px 14px rgba(176, 130, 30, .24); }
+.type-item.is-secret .tc-code {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.type-item.is-secret .tc-code em {
+  font-style: normal;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: #4A3410;
+  background: linear-gradient(100deg, #F0C860, #E0A33B);
+  border-radius: 999px;
+  padding: 2px 7px;
+}
+

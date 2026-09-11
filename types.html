@@ -60,161 +60,40 @@ function flipAxis(code, axisIndex) {
   chars[axisIndex] = chars[axisIndex] === ax.a ? ax.b : ax.a;
   return chars.join("");
 }
-function findMatches(code) {
-  const opposite = flipAxis(flipAxis(code, 0), 1);
-  return [
-    { label: "息が合う相手", code: flipAxis(code, 2), why: "計画の立て方が逆どうし。抜けを補い合えます" },
-    { label: "刺激をくれる相手", code: flipAxis(code, 0), why: "登り方は近いのに、山に求めるものが違います" },
-    { label: "山の見方が正反対の相手", code: opposite,
-      why: (typeof OPPOSITE_WHY !== "undefined" && OPPOSITE_WHY[code]) || "" },
+function findMatches(code, secret) {
+  const w = (typeof MATCH_WHY !== "undefined" && MATCH_WHY[code]) || {};
+  const list = [
+    { label: "息が合う相手",     code: flipAxis(code, 2), why: w.calm || "" },
+    { label: "刺激をくれる相手", code: flipAxis(code, 0), why: w.spark || "" },
   ];
-}
-
-/* ---------- タイプ1件のカード ---------- */
-function typeCard(code) {
-  const t = TYPES[code];
-  const c = CHARACTERS[code] || { animal: "", item: "" };
-  const g = groupOf(code);
-
-  const axisText = code.split("").map((ch, i) => {
-    const ax = AXES[i];
-    return `<span class="ax"><b>${ch}</b>${ch === ax.a ? ax.aName : ax.bName}</span>`;
-  }).join("");
-
-  const matches = findMatches(code).map((m) => {
-    const mt = TYPES[m.code], mc = CHARACTERS[m.code];
-    if (!mt) return "";
-    return `
-      <a class="match" href="#${m.code}" style="background:${groupOf(m.code).band}">
-        <span class="match-label">${m.label}</span>
-        ${characterSVG(m.code, "char char-sm")}
-        <span class="match-code" style="background:${groupOf(m.code).deep}">${m.code}</span>
-        <span class="match-name">${mc ? mc.animal : mt.name}</span>
-        <span class="match-type">${mt.name}</span>
-        <span class="match-why">${m.why}</span>
-      </a>`;
-  }).join("");
-
-  return `
-    <article class="type-item" id="${code}">
-      <header class="ti-head">
-        ${characterSVG(code, "char ti-char")}
-        <div class="ti-title">
-          <span class="tc-code" style="background:${g.deep}">${code}</span>
-          <h3 class="ti-name">${c.animal}</h3>
-          <p class="tc-type">${t.name}</p>
-          <p class="tc-copy">「${t.copy}」</p>
-          <p class="ti-item"><b>持ちもの</b>${c.item}</p>
-        </div>
-      </header>
-
-      <div class="ti-axes">${axisText}</div>
-
-      <section class="ti-block">
-        <h4 class="ti-label">特徴</h4>
-        <p class="ti-text">${t.features}</p>
-      </section>
-
-      <section class="ti-block ti-caution">
-        <h4 class="ti-label">気をつけたいこと</h4>
-        <p class="ti-text">${t.caution}</p>
-      </section>
-
-      <section class="ti-block">
-        <h4 class="ti-label">一緒に登ると面白い相手</h4>
-        <div class="match-row">${matches}</div>
-      </section>
-
-    </article>`;
-}
-
-/* ---------- 追従タブの高さを測って記録する ----------
-   アンカーで移動したときに、カードがタブの下に隠れないようにするため */
-function measureTabs() {
-  const tabs = document.getElementById("group-tabs");
-  if (!tabs) return;
-  const h = Math.round(tabs.getBoundingClientRect().height);
-  if (h) document.documentElement.style.setProperty("--tab-h", h + "px");
-}
-window.addEventListener("resize", measureTabs);
-
-/* ---------- 表示の切り替え ---------- */
-function showGroup(key, anchor) {
-  const g = GROUPS[key] ? GROUPS[key] : GROUPS.PS;
-  key = GROUPS[key] ? key : "PS";
-
-  document.querySelectorAll(".gtab").forEach((b) => {
-    const on = b.dataset.g === key;
-    b.classList.toggle("on", on);
-    b.style.background = on ? GROUPS[b.dataset.g].band : "";
-    b.style.color = on ? GROUPS[b.dataset.g].deep : "";
-  });
-
-  document.getElementById("group-body").innerHTML = `
-    <div class="group-hero" style="background:${g.band}">
-      <span class="gh-bg" style="color:${g.deep}">${g.name}</span>
-      <p class="gh-name" style="color:${g.deep}">${g.name}</p>
-      <p class="gh-lead">${g.lead}</p>
-      <p class="gh-axis">${g.axis}　${key}＊＊</p>
-    </div>
-    ${codesOf(key).map(typeCard).join("")}`;
-
-  measureTabs();
-  const target = anchor && document.getElementById(anchor);
-  if (target) {
-    // レイアウトが確定してから移動する
-    requestAnimationFrame(() => {
-      measureTabs();
-      target.scrollIntoView({ block: "start" });
+  if (secret) {
+    list.push({
+      label: "相性は文句なし",
+      code: code,
+      why: typeof SECRET_MATCH_WHY !== "undefined" ? SECRET_MATCH_WHY : "",
     });
   } else {
-    window.scrollTo({ top: 0 });
+    list.push({
+      label: "山の見方が正反対の相手",
+      code: flipAxis(flipAxis(code, 0), 1),
+      why: w.opp || "",
+    });
   }
-}
-
-/* ---------- URLから初期表示を決める ----------
-   ?g=PS があればその系統。なければ #PSLC のアンカーから逆引きする */
-function routeFromURL() {
-  const q = new URLSearchParams(location.search).get("g");
-  const hash = (location.hash || "").slice(1);
-
-  if (q && GROUPS[q]) return showGroup(q, TYPES[hash] ? hash : null);
-  if (hash && TYPES[hash]) return showGroup(hash.slice(0, 2), hash);
-  if (hash && GROUPS[hash]) return showGroup(hash, null);
-  showGroup("PS");   // 指定がなければ孤峰から
-}
-
-/* ---------- 操作 ---------- */
-/* ---------- 系統切り替えタブ ---------- */
-document.getElementById("group-tabs").innerHTML = ORDER.map((key) => {
-  const g = GROUPS[key];
-  return `<button class="gtab" data-g="${key}">
-    ${characterSVG(codesOf(key)[0], "char gtab-char", true)}
-    <span class="gtab-name">${g.name}</span>
-  </button>`;
-}).join("");
-
-/* ---------- 相性のいいタイプ（結果画面と同じルール） ---------- */
-function flipAxis(code, axisIndex) {
-  const ax = AXES[axisIndex];
-  const chars = code.split("");
-  chars[axisIndex] = chars[axisIndex] === ax.a ? ax.b : ax.a;
-  return chars.join("");
-}
-function findMatches(code) {
-  const opposite = flipAxis(flipAxis(code, 0), 1);
-  return [
-    { label: "息が合う相手", code: flipAxis(code, 2), why: "計画の立て方が逆どうし。抜けを補い合えます" },
-    { label: "刺激をくれる相手", code: flipAxis(code, 0), why: "登り方は近いのに、山に求めるものが違います" },
-    { label: "山の見方が正反対の相手", code: opposite,
-      why: (typeof OPPOSITE_WHY !== "undefined" && OPPOSITE_WHY[code]) || "" },
-  ];
+  return list;
 }
 
 /* ---------- タイプ1件のカード ---------- */
-function typeCard(code) {
+/* シークレットに対応するタイプかどうか */
+function secretOf(code) {
+  return (typeof SECRETS !== "undefined" && SECRETS.find((s) => s.code === code)) || null;
+}
+
+function typeCard(code, asSecret) {
+  const sec = asSecret ? secretOf(code) : null;
   const t = TYPES[code];
-  const c = CHARACTERS[code] || { animal: "", item: "" };
+  const c = sec
+    ? { animal: sec.animal, item: SECRET_CHARACTERS[sec.id].item }
+    : (CHARACTERS[code] || { animal: "", item: "" });
   const g = groupOf(code);
 
   const axisText = code.split("").map((ch, i) => {
@@ -222,7 +101,7 @@ function typeCard(code) {
     return `<span class="ax"><b>${ch}</b>${ch === ax.a ? ax.aName : ax.bName}</span>`;
   }).join("");
 
-  const matches = findMatches(code).map((m) => {
+  const matches = findMatches(code, sec).map((m) => {
     const mt = TYPES[m.code], mc = CHARACTERS[m.code];
     if (!mt) return "";
     return `
@@ -237,14 +116,17 @@ function typeCard(code) {
   }).join("");
 
   return `
-    <article class="type-item" id="${code}">
+    <article class="type-item${sec ? " is-secret" : ""}" id="${code}"
+             ${secretOf(code) ? 'data-secret="1"' : ""}>
       <header class="ti-head">
-        ${characterSVG(code, "char ti-char")}
+        <div class="ti-char-wrap">
+          ${sec ? secretSVG(sec.id, "char ti-char") : characterSVG(code, "char ti-char")}
+        </div>
         <div class="ti-title">
-          <span class="tc-code" style="background:${g.deep}">${code}</span>
+          <span class="tc-code" style="background:${sec ? "#A5761F" : g.deep}">${code}${sec ? '<em>SECRET</em>' : ""}</span>
           <h3 class="ti-name">${c.animal}</h3>
-          <p class="tc-type">${t.name}</p>
-          <p class="tc-copy">「${t.copy}」</p>
+          <p class="tc-type">${sec ? sec.typeName : t.name}</p>
+          <p class="tc-copy">「${sec ? sec.copy : t.copy}」</p>
           <p class="ti-item"><b>持ちもの</b>${c.item}</p>
         </div>
       </header>
@@ -253,12 +135,12 @@ function typeCard(code) {
 
       <section class="ti-block">
         <h4 class="ti-label">特徴</h4>
-        <p class="ti-text">${t.features}</p>
+        <p class="ti-text">${sec ? sec.features : t.features}</p>
       </section>
 
       <section class="ti-block ti-caution">
         <h4 class="ti-label">気をつけたいこと</h4>
-        <p class="ti-text">${t.caution}</p>
+        <p class="ti-text">${sec ? sec.caution : t.caution}</p>
       </section>
 
       <section class="ti-block">
@@ -298,7 +180,7 @@ function showGroup(key, anchor) {
       <p class="gh-lead">${g.lead}</p>
       <p class="gh-axis">${g.axis}　${key}＊＊</p>
     </div>
-    ${codesOf(key).map(typeCard).join("")}`;
+    ${codesOf(key).map((c) => typeCard(c)).join("")}`;
 
   measureTabs();
   const target = anchor && document.getElementById(anchor);
@@ -342,6 +224,33 @@ document.getElementById("group-body").addEventListener("click", (e) => {
   e.preventDefault();
   history.pushState(null, "", `?g=${code.slice(0, 2)}#${code}`);
   showGroup(code.slice(0, 2), code);
+});
+
+/* ---------- キャラクターを2秒以内に3回押すと、同じタイプの隠れた姿にかわる ----------
+   タップの記録はカード自身に持たせる（差し替え時に自然にリセットされる） */
+document.getElementById("group-body").addEventListener("click", (e) => {
+  const wrap = e.target.closest(".ti-char-wrap");
+  if (!wrap) return;
+  const card = wrap.closest(".type-item");
+  if (!card || !card.dataset.secret) return;
+
+  const now = Date.now();
+  const taps = (card.dataset.taps || "")
+    .split(",")
+    .filter(Boolean)
+    .map(Number)
+    .filter((t) => now - t < 2000);
+  taps.push(now);
+
+  if (taps.length < 3) {
+    card.dataset.taps = taps.join(",");
+    return;
+  }
+  card.replaceWith(
+    document.createRange().createContextualFragment(
+      typeCard(card.id, !card.classList.contains("is-secret"))
+    )
+  );
 });
 
 window.addEventListener("popstate", routeFromURL);

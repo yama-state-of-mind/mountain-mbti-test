@@ -400,6 +400,25 @@ function showResult() {
     })
     .join("");
 
+  /* おすすめの山（結果画面のみ。シークレットは専用の3座） */
+  const mts = secret
+    ? (typeof SECRET_MOUNTAINS !== "undefined" ? SECRET_MOUNTAINS[secret.id] : null)
+    : (typeof MOUNTAINS !== "undefined" ? MOUNTAINS[code] : null);
+
+  if (mts && mts.length) {
+    $("#result-mountains").innerHTML = mts
+      .map((m) => `
+        <div class="mt">
+          <p class="mt-name">${m.name}${m.note ? '<span class="mt-flag">要注意</span>' : ""}</p>
+          <p class="mt-why">${m.why}</p>
+        </div>`)
+      .join("");
+    const hasNote = mts.some((m) => m.note);
+    const noteEl = $("#result-mt-note");
+    noteEl.hidden = !hasNote;
+    if (hasNote) noteEl.textContent = typeof MOUNTAIN_NOTE !== "undefined" ? MOUNTAIN_NOTE : "";
+  }
+
   $("#result-axes").innerHTML = detail
     .map((d) => {
       const winPct = d.aWins ? d.aPct : d.bPct;

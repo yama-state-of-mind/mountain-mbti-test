@@ -103,15 +103,25 @@ document.getElementById("matrix").insertAdjacentHTML("beforeend", ORDER.map((key
   const side = (key === "PS" || key === "ES") ? "l" : "r";
   const row = (key === "PS" || key === "PG") ? "top" : "bottom";
   return `
-    <a class="mx-cell mx-${side} mx-${row}"
-       href="types.html?g=${key}" style="background:${g.band}">
+    <div class="mx-cell mx-${side} mx-${row}" data-g="${key}" style="background:${g.band}">
       <span class="mx-bg" style="color:${g.deep}">${g.name}</span>
       <span class="mx-lead">${g.lead}</span>
       <span class="mx-chars">
-        ${codesOf(key).map((c) => characterSVG(c, "char", true)).join("")}
+        ${codesOf(key).map((c) => {
+          const ch = CHARACTERS[c];
+          return `<a class="mx-char" href="types.html?g=${key}#${c}"
+                     aria-label="${ch ? ch.animal : c}の紹介を見る">${characterSVG(c, "char", true)}</a>`;
+        }).join("")}
       </span>
-    </a>`;
+    </div>`;
 }).join(""));
+
+/* キャラクター以外の場所を押したら、その系統の先頭へ */
+document.getElementById("matrix").addEventListener("click", (e) => {
+  if (e.target.closest(".mx-char")) return;   // キャラクターは個別のリンクに任せる
+  const cell = e.target.closest(".mx-cell");
+  if (cell) location.href = `types.html?g=${cell.dataset.g}`;
+});
 </script>
 </body>
 </html>
