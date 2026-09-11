@@ -39,7 +39,7 @@
     <div class="matrix">
       <p class="mx-axis mx-top"><b>P</b>高山・ピークハント</p>
       <div class="mx-mid">
-        <p class="mx-axis mx-left"><b>S</b>ソロ</p>
+        <p class="mx-axis mx-left"><b>G</b>グループ</p>
         <div class="mx-grid" id="matrix">
           <svg class="mx-cross" viewBox="0 0 300 300" aria-hidden="true">
             <path d="M150 14 V286" stroke="#AFC3CF" stroke-width="2.4"/>
@@ -50,7 +50,7 @@
             <path d="M294 150 L282 144 L282 156 Z" fill="#AFC3CF"/>
           </svg>
         </div>
-        <p class="mx-axis mx-right"><b>G</b>グループ</p>
+        <p class="mx-axis mx-right"><b>S</b>ソロ</p>
       </div>
       <p class="mx-axis mx-bottom"><b>E</b>森・エンジョイ</p>
     </div>
@@ -65,6 +65,7 @@
 <script>
 /* 診断の仕組みのページ。4軸の解説と、4生息エリアのカードを組み立てる */
 const ORDER = ["PS", "PG", "ES", "EG"];
+const MATRIX_ORDER = ["PG", "PS", "EG", "ES"];
 const codesOf = (key) => Object.keys(TYPES).filter((c) => c.slice(0, 2) === key);
 
 const AXIS_MEMO = {
@@ -97,9 +98,9 @@ document.getElementById("axis-table").innerHTML = AXES.map((ax) => `
   </div>`).join("");
 
 /* 目的（縦）× 仲間（横）の4象限。左上から 孤峰・稜線・静林・陽だまり */
-document.getElementById("matrix").insertAdjacentHTML("beforeend", ORDER.map((key) => {
+document.getElementById("matrix").insertAdjacentHTML("beforeend", MATRIX_ORDER.map((key) => {
   const g = GROUPS[key];
-  const side = (key === "PS" || key === "ES") ? "l" : "r";
+  const side = (key === "PG" || key === "EG") ? "l" : "r";
   const row = (key === "PS" || key === "PG") ? "top" : "bottom";
   return `
     <div class="mx-cell mx-${side} mx-${row}" data-g="${key}" style="background:${g.band}">

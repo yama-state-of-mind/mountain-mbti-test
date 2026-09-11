@@ -12,7 +12,7 @@ const CHARACTERS = {
    ========================================================= */
 
 /* 1 カモシカ｜伏し目＋頬もこ　まる目＋伏し目 */
-PSLC: { animal: "カモシカ", item: "折りたたんだ地形図", svg: `
+PSLC: { animal: "カモシカ", item: "地形図", svg: `
   <rect x="58" y="124" width="13" height="24" rx="6" fill="#5A625C"/>
   <rect x="89" y="124" width="13" height="24" rx="6" fill="#5A625C"/>
   <rect x="56" y="142" width="17" height="9" rx="3.5" fill="#2E322E"/>
@@ -47,12 +47,6 @@ PSLC: { animal: "カモシカ", item: "折りたたんだ地形図", svg: `
 PSLA: { animal: "イヌワシ", item: "ピッケル", svg: `
   <path d="M18 152 L36 118 L124 118 L142 152 Z" fill="#8B9096"/>
   <path d="M36 118 L124 118 L130 128 L30 128 Z" fill="#A2A7AC"/>
-  <g transform="rotate(6 126 96)">
-    <rect x="123" y="52" width="6.5" height="72" rx="3" fill="#5E6266"/>
-    <rect x="123" y="52" width="3" height="72" fill="#878C90"/>
-    <path d="M108 56 Q120 47 132 51 L132 59 Q122 55 112 63 Z" fill="#9AA0A4"/>
-    <path d="M132 51 L146 59 L132 61 Z" fill="#B6BCC0"/>
-  </g>
   <path d="M62 78 Q30 84 18 110 Q12 130 22 142 Q34 126 52 118 Q44 132 48 144
            Q66 130 70 100 Z" fill="#31271E"/>
   <path d="M60 86 Q36 94 28 114 Q40 104 56 100 Z" fill="#4A3A2B"/>
@@ -79,7 +73,13 @@ PSLA: { animal: "イヌワシ", item: "ピッケル", svg: `
   <path d="M64 49.2 H76" stroke="#A98352" stroke-width="3.6" stroke-linecap="round"/>
   <path d="M86 49.2 H98" stroke="#A98352" stroke-width="3.6" stroke-linecap="round"/>
   <path d="M58 44 Q70 40 78 44" stroke="#7A5F38" stroke-width="4" stroke-linecap="round" fill="none"/>
-  <path d="M102 44 Q90 40 82 44" stroke="#7A5F38" stroke-width="4" stroke-linecap="round" fill="none"/>` },
+  <path d="M102 44 Q90 40 82 44" stroke="#7A5F38" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <g transform="rotate(6 126 96)">
+    <rect x="123" y="52" width="6.5" height="72" rx="3" fill="#5E6266"/>
+    <rect x="123" y="52" width="3" height="72" fill="#878C90"/>
+    <path d="M108 56 Q120 47 132 51 L132 59 Q122 55 112 63 Z" fill="#9AA0A4"/>
+    <path d="M132 51 L146 59 L132 61 Z" fill="#B6BCC0"/>
+  </g>` },
 
 /* 3 オコジョ｜首かしげ＋前Cの尾　まる目 */
 PSFC: { animal: "オコジョ", item: "使い込んだ水筒", svg: `
@@ -216,7 +216,7 @@ PGLA: { animal: "ホシガラス", item: "肩に掛けたザイル", svg: `
   <rect x="48" y="118" width="12" height="13" rx="3" fill="#A8641E"/>` },
 
 /* 7 イワツバメ｜燕尾＋赤十字　まる目 */
-PGFC: { animal: "イワツバメ", item: "肩掛けのファーストエイドポーチ", svg: `
+PGFC: { animal: "イワツバメ", item: "ファーストエイドポーチ", svg: `
   <path d="M66 116 Q80 112 94 116 Q112 140 118 158 Q80 132 42 158 Q48 140 66 116 Z" fill="#2C3A50"/>
   <path d="M66 92 Q40 86 18 96 Q6 104 4 116 Q24 106 46 110 Q58 102 66 98 Z" fill="#33445E"/>
   <path d="M94 92 Q120 86 142 96 Q154 104 156 116 Q136 106 114 110 Q102 102 94 98 Z" fill="#33445E"/>
@@ -336,11 +336,13 @@ ESLA: { animal: "ムササビ", item: "首に巻いた手ぬぐい", svg: `
 ESFC: { animal: "ホンドタヌキ", item: "湯気の立つマグカップ", svg: `
   <ellipse cx="118" cy="128" rx="24" ry="11" fill="#8A7259" transform="rotate(-10 118 128)"/>
   <path d="M104 122 Q116 120 128 124 M106 133 Q118 134 130 130" stroke="#5A4632" stroke-width="4"/>
-  <ellipse cx="80" cy="126" rx="40" ry="18" fill="#7A6349"/>
-  <ellipse cx="78" cy="110" rx="36" ry="30" fill="#8A7259"/>
-  <ellipse cx="78" cy="118" rx="22" ry="20" fill="#CDBCA1"/>
-  <ellipse cx="46" cy="124" rx="11" ry="9" fill="#6F5B44" transform="rotate(-14 46 124)"/>
-  <ellipse cx="110" cy="124" rx="11" ry="9" fill="#6F5B44" transform="rotate(14 110 124)"/>
+  <ellipse cx="80" cy="130" rx="34" ry="14" fill="#6F5B44"/>
+  <ellipse cx="79" cy="108" rx="33" ry="30" fill="#8A7259"/>
+  <ellipse cx="79" cy="116" rx="21" ry="19" fill="#CDBCA1"/>
+  <ellipse cx="50" cy="132" rx="13" ry="9" fill="#6F5B44" transform="rotate(-10 50 132)"/>
+  <ellipse cx="108" cy="132" rx="13" ry="9" fill="#6F5B44" transform="rotate(10 108 132)"/>
+  <ellipse cx="50" cy="134" rx="7" ry="4.6" fill="#8A7259" transform="rotate(-10 50 134)"/>
+  <ellipse cx="108" cy="134" rx="7" ry="4.6" fill="#8A7259" transform="rotate(10 108 134)"/>
   <circle cx="57" cy="46" r="11" fill="#6F5B44"/>
   <circle cx="101" cy="46" r="11" fill="#6F5B44"/>
   <circle cx="79" cy="64" r="29" fill="#97806A"/>
@@ -353,19 +355,25 @@ ESFC: { animal: "ホンドタヌキ", item: "湯気の立つマグカップ", sv
   <circle cx="92" cy="61" r="5.2" fill="#1E1A16"/>
   <circle cx="67.6" cy="59.3" r="1.7" fill="#FFFFFF"/>
   <circle cx="93.6" cy="59.3" r="1.7" fill="#FFFFFF"/>
-  <path d="M70 100 Q64 93 70 86 Q76 79 70 72" stroke="#CFC9BA" stroke-width="4" fill="none" stroke-linecap="round"/>
-  <path d="M88 100 Q82 93 88 86 Q94 79 88 72" stroke="#CFC9BA" stroke-width="4" fill="none" stroke-linecap="round"/>
-  <path d="M92 110 Q106 116 92 122" stroke="#9FC4C0" stroke-width="7" fill="none"/>
-  <rect x="64" y="102" width="28" height="26" rx="5" fill="#6FA6A2"/>
-  <rect x="64" y="102" width="18" height="26" rx="5" fill="#8FC4C0"/>
-  <ellipse cx="78" cy="102" rx="14" ry="4.4" fill="#4E8480"/>
-  <ellipse cx="78" cy="101.5" rx="10" ry="3" fill="#7A5A3C"/>` },
+  <path d="M72 103 Q68 99 72 95" stroke="#FBFAF6" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+  <path d="M79 101 Q75 97 79 93" stroke="#FBFAF6" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+  <path d="M86 103 Q90 99 86 95" stroke="#FBFAF6" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+  <path d="M91 112 Q102 117 91 122" stroke="#9FC4C0" stroke-width="6" fill="none"/>
+  <rect x="67" y="107" width="24" height="22" rx="5" fill="#6FA6A2"/>
+  <rect x="67" y="107" width="15" height="22" rx="5" fill="#8FC4C0"/>
+  <ellipse cx="79" cy="107" rx="12" ry="3.8" fill="#4E8480"/>
+  <ellipse cx="79" cy="106.6" rx="8.6" ry="2.6" fill="#7A5A3C"/>
+  <ellipse cx="63" cy="118" rx="9" ry="10" fill="#6F5B44"/>
+  <ellipse cx="95" cy="118" rx="9" ry="10" fill="#6F5B44"/>
+  <ellipse cx="67" cy="116" rx="5" ry="6" fill="#8A7259" transform="rotate(-14 67 116)"/>
+  <ellipse cx="91" cy="116" rx="5" ry="6" fill="#8A7259" transform="rotate(14 91 116)"/>` },
 
 /* 12 ホンドギツネ｜流れる尾＋花びら　たれ目＋微笑 */
-ESFA: { animal: "ホンドギツネ", item: "道で摘んだ一輪の花", svg: `
-  <path d="M96 126 Q124 130 140 112 Q150 100 146 84 Q138 96 124 100
-           Q136 108 128 118 Q114 128 94 118 Z" fill="#C4703A"/>
-  <path d="M140 92 Q148 86 146 78 Q138 84 136 92 Z" fill="#F4EDE2"/>
+ESFA: { animal: "ホンドギツネ", item: "一輪の花", svg: `
+  <path d="M94 124 Q128 128 140 104 Q146 92 142 82" stroke="#C4703A" stroke-width="18"
+        fill="none" stroke-linecap="round"/>
+  <path d="M140 104 Q146 92 142 82" stroke="#F4EDE2" stroke-width="18"
+        fill="none" stroke-linecap="round"/>
   <rect x="62" y="132" width="12" height="17" rx="5.5" fill="#A85832"/>
   <rect x="86" y="132" width="12" height="17" rx="5.5" fill="#A85832"/>
   <ellipse cx="78" cy="112" rx="31" ry="29" fill="#C4703A"/>
@@ -402,7 +410,7 @@ ESFA: { animal: "ホンドギツネ", item: "道で摘んだ一輪の花", svg: 
    ========================================================= */
 
 /* 13 ニホンジカ｜角の旗（フリーズ） */
-EGLC: { animal: "ニホンジカ", item: "角に結んだ先導用の小旗", svg: `
+EGLC: { animal: "ニホンジカ", item: "先導用の小旗", svg: `
   <rect x="58" y="128" width="12" height="20" rx="5.5" fill="#8A6238"/>
   <rect x="90" y="128" width="12" height="20" rx="5.5" fill="#8A6238"/>
   <ellipse cx="80" cy="112" rx="34" ry="30" fill="#A5764A"/>
@@ -433,7 +441,7 @@ EGLC: { animal: "ニホンジカ", item: "角に結んだ先導用の小旗", sv
   <ellipse cx="108" cy="112" rx="10" ry="11" fill="#8A6238" transform="rotate(18 108 112)"/>` },
 
 /* 14 ヤマセミ｜ウインク（フリーズ） */
-EGLA: { animal: "ヤマセミ", item: "首から下げた一眼カメラ", svg: `
+EGLA: { animal: "ヤマセミ", item: "三脚カメラ", svg: `
   <path d="M102 114 Q128 118 140 132 Q120 132 104 126 Z" fill="#3A3A38"/>
   <ellipse cx="78" cy="104" rx="34" ry="32" fill="#3A3A38"/>
   <ellipse cx="77" cy="114" rx="22" ry="21" fill="#F7F5F0"/>
@@ -445,26 +453,28 @@ EGLA: { animal: "ヤマセミ", item: "首から下げた一眼カメラ", svg: 
     <rect x="98" y="106" width="8" height="4.6" rx="2.3" transform="rotate(6 98 106)"/>
   </g>
   <ellipse cx="48" cy="106" rx="13" ry="22" fill="#4A4A46" transform="rotate(-8 48 106)"/>
-  <rect x="66" y="132" width="9" height="15" rx="4" fill="#B8AE97"/>
-  <rect x="85" y="132" width="9" height="15" rx="4" fill="#B8AE97"/>
   <path d="M62 48 Q54 28 66 20 Q70 36 74 44 Z" fill="#3A3A38"/>
   <path d="M72 44 Q72 20 82 14 Q80 32 86 44 Z" fill="#3A3A38"/>
   <path d="M84 44 Q92 24 104 20 Q93 36 95 48 Z" fill="#3A3A38"/>
   <circle cx="78" cy="60" r="25" fill="#3A3A38"/>
-  <path d="M57 64 Q63 74 73 76 Q67 64 65 54 Z" fill="#F7F5F0"/>
-  <path d="M99 64 Q93 74 83 76 Q89 64 91 54 Z" fill="#F7F5F0"/>
+  <path d="M58 66 Q64 74 72 76 Q67 68 65 60 Z" fill="#F7F5F0"/>
+  <path d="M98 66 Q92 74 84 76 Q89 68 91 60 Z" fill="#F7F5F0"/>
   <path d="M66 80 Q78 74 90 80 Q88 90 78 92 Q68 90 66 80 Z" fill="#E4C79A"/>
   <path d="M72 66 L85 66 Q83 78 78 82 Q74 78 72 66 Z" fill="#5B5B57"/>
-  <circle cx="67" cy="55" r="4.6" fill="#1E1A16"/>
-  <circle cx="68.4" cy="53.6" r="1.4" fill="#FFFFFF"/>
-  <path d="M62 51.6 H72" stroke="#3A3A38" stroke-width="3" stroke-linecap="round"/>
-  <path d="M84 55 Q89 51 94 55" stroke="#F7F5F0" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="67" cy="55" r="5" fill="#1E1A16"/>
+  <circle cx="91" cy="55" r="5" fill="#1E1A16"/>
+  <circle cx="68.6" cy="53.3" r="1.7" fill="#FFFFFF"/>
+  <circle cx="92.6" cy="53.3" r="1.7" fill="#FFFFFF"/>
+  <g stroke="#D8A63E" stroke-width="3.6" stroke-linecap="round" fill="none">
+    <path d="M70 128 V138"/><path d="M70 138 L63 144"/><path d="M70 138 L70 146"/><path d="M70 138 L77 144"/>
+    <path d="M88 128 V138"/><path d="M88 138 L81 144"/><path d="M88 138 L88 146"/><path d="M88 138 L95 144"/>
+  </g>
   <path d="M62 126 L50 154 M94 126 L106 154 M78 126 L78 154"
-        stroke="#5B5B57" stroke-width="5" stroke-linecap="round"/>
-  <rect x="70" y="120" width="16" height="10" rx="3" fill="#4A4E52"/>
-  <rect x="60" y="98" width="36" height="24" rx="5" fill="#3A3E42"/>
-  <rect x="84" y="93" width="10" height="6" rx="2" fill="#3A3E42"/>
-  <circle cx="78" cy="110" r="9" fill="#24282C"/>
+        stroke="#A8A296" stroke-width="5" stroke-linecap="round"/>
+  <rect x="70" y="120" width="16" height="10" rx="3" fill="#A8A296"/>
+  <rect x="60" y="98" width="36" height="24" rx="5" fill="#C9C3B8"/>
+  <rect x="84" y="93" width="10" height="6" rx="2" fill="#C9C3B8"/>
+  <circle cx="78" cy="110" r="9" fill="#8A857A"/>
   <circle cx="78" cy="110" r="4.6" fill="#4EC0D8"/>
   <circle cx="80" cy="108" r="1.6" fill="#C7EEF6"/>` },
 
@@ -491,16 +501,16 @@ EGFC: { animal: "ニホンリス", item: "みんなに配るどんぐり", svg: 
   <ellipse cx="44" cy="112" rx="10" ry="11" fill="#9E7038" transform="rotate(-22 44 112)"/>
   <ellipse cx="104" cy="112" rx="10" ry="11" fill="#9E7038" transform="rotate(22 104 112)"/>
   <g>
-    <ellipse cx="42" cy="104" rx="8" ry="10" fill="#B98F52"/>
-    <ellipse cx="40" cy="103" rx="4.2" ry="7" fill="#D4AE76"/>
-    <path d="M34 97 Q42 90 50 96 Q42 100 34 97 Z" fill="#5E8A4E"/>
-    <path d="M42 89 L42 85" stroke="#5E8A4E" stroke-width="2.2" stroke-linecap="round"/>
+    <ellipse cx="42" cy="104" rx="8" ry="10" fill="#7A5124"/>
+    <ellipse cx="40" cy="103" rx="4.2" ry="7" fill="#9E6B33"/>
+    <path d="M34 97 Q42 89 50 96 Q42 100 34 97 Z" fill="#4A2F16"/>
+    <path d="M42 89 L42 85" stroke="#4A2F16" stroke-width="2.2" stroke-linecap="round"/>
   </g>
   <g>
-    <ellipse cx="106" cy="104" rx="8" ry="10" fill="#B98F52"/>
-    <ellipse cx="104" cy="103" rx="4.2" ry="7" fill="#D4AE76"/>
-    <path d="M98 97 Q106 90 114 96 Q106 100 98 97 Z" fill="#5E8A4E"/>
-    <path d="M106 89 L106 85" stroke="#5E8A4E" stroke-width="2.2" stroke-linecap="round"/>
+    <ellipse cx="106" cy="104" rx="8" ry="10" fill="#7A5124"/>
+    <ellipse cx="104" cy="103" rx="4.2" ry="7" fill="#9E6B33"/>
+    <path d="M98 97 Q106 89 114 96 Q106 100 98 97 Z" fill="#4A2F16"/>
+    <path d="M106 89 L106 85" stroke="#4A2F16" stroke-width="2.2" stroke-linecap="round"/>
   </g>` },
 
 /* 16 ノウサギ｜片耳倒し＋開き口＋自撮り　まる目＋上目 */
@@ -526,8 +536,11 @@ EGFA: { animal: "ノウサギ", item: "自撮り棒つきスマホ", svg: `
     <path d="M60 116 Q46 100 40 82" stroke="#5B5B57" stroke-width="5" stroke-linecap="round" fill="none"/>
     <g transform="rotate(-20 36 66)">
       <rect x="24" y="44" width="25" height="36" rx="5" fill="#6FD8B0"/>
-      <rect x="27" y="48" width="19" height="28" rx="2" fill="#EAF7F2"/>
-      <path d="M29 70 L35 60 L39 66 L43 58 L44 70 Z" fill="#6E8B7E"/>
+      <rect x="26.5" y="46.5" width="20" height="31" rx="3.5" fill="#8FE4C4"/>
+      <rect x="29" y="49" width="11" height="8" rx="2.5" fill="#3E5A52"/>
+      <circle cx="33" cy="53" r="2.6" fill="#1E2E2A"/>
+      <circle cx="33" cy="53" r="1.2" fill="#7FBFA8"/>
+      <circle cx="37.5" cy="53" r="1.3" fill="#2E453F"/>
     </g>
     <ellipse cx="58" cy="114" rx="9" ry="10" fill="#96866F"/>
   </g>` },

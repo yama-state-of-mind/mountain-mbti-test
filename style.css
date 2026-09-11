@@ -576,17 +576,31 @@ body {
 .match-body { flex: 1; }
 
 /* スタート画面・結果画面から一覧へ */
-.hero-link { margin-top: 16px; font-size: 13px; }
-.hero-link a + a { margin-left: 18px; }
+/* 主ボタンより小さい、枠線のサブボタン */
+.hero-link {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 .result .hero-link { margin-top: 20px; }
 .hero-link a {
-  color: var(--fjord);
+  display: inline-block;
+  font-size: 12.5px;
   font-weight: 700;
+  color: var(--fjord);
   text-decoration: none;
-  border-bottom: 1.5px solid #C3D5E0;
-  padding-bottom: 2px;
+  background: var(--paper);
+  border: 1.5px solid #C3D5E0;
+  border-radius: 999px;
+  padding: 8px 18px;
+  line-height: 1.4;
+  transition: background .15s, border-color .15s;
 }
-.hero-link a:hover { border-bottom-color: var(--fjord); }
+.hero-link a:hover { background: #EDF3F7; border-color: var(--fjord); }
+.hero-link a:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+.list-foot.hero-link { margin-top: 22px; }
 .hero-link a:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
 
 /* =========================================================
@@ -954,7 +968,7 @@ body {
   margin-right: 4px;
   vertical-align: -1px;
 }
-.mx-right b, .mx-bottom b { color: var(--fjord); }
+.mx-left b, .mx-bottom b { color: var(--fjord); }
 
 .mx-top { margin-bottom: 6px; }
 .mx-bottom { margin-top: 6px; }
