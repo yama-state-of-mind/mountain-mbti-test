@@ -221,6 +221,7 @@ function updateProgress() {
 
 /* ---------- ページ移動 ---------- */
 $("#btn-start").addEventListener("click", () => {
+  track("quiz_start");
   currentPage = 0;
   showScreen("quiz");
   renderPage();
@@ -248,6 +249,7 @@ $("#btn-next").addEventListener("click", () => {
   }
   if (currentPage < totalPages - 1) {
     currentPage++;
+    track("quiz_page", { page: currentPage + 1 });
     renderPage();
     window.scrollTo({ top: 0, behavior: "smooth" });
   } else {
@@ -341,6 +343,12 @@ function findSecret(code) {
 }
 
 /* ---------- 結果表示 ---------- */
+/* ---------- 計測（Google Analytics） ----------
+   gtag が読み込めていない環境でも落ちないようにする */
+function track(name, params) {
+  if (typeof gtag === "function") gtag("event", name, params || {});
+}
+
 function showResult() {
   const { code, detail } = calcResult();
   const type = TYPES[code] || { name: "未知のタイプ", desc: "" };
@@ -454,6 +462,15 @@ function showResult() {
     "https://social-plugins.line.me/lineit/share?url=" +
     encodeURIComponent(SITE_URL) + "&text=" + encodeURIComponent(text);
 
+  track("diagnosis_complete", {
+    type_code: code,
+    animal: shareAnimal,
+    type_name: shareType,
+    area: g.name,
+    is_secret: secret ? "yes" : "no",
+    secret_id: secret ? secret.id : "",
+  });
+
   showScreen("result");
   revealResult();
 
@@ -491,9 +508,18 @@ function revealResult() {
 
 /* ---------- もう一度 ---------- */
 $("#btn-retry").addEventListener("click", () => {
+  track("quiz_retry");
   answers.fill(null);
   currentPage = 0;
   QUIZ = buildQuiz(); // 順番を引き直す
   showScreen("start");
 });
 
+
+/* シェアボタンが押されたときの計測 */
+["btn-share", "btn-line"].forEach((id) => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener("click", () => {
+    track("share_click", { channel: id === "btn-share" ? "x" : "line" });
+  });
+});
