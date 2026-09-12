@@ -1525,8 +1525,9 @@ body {
    ページ下部のXリンク
    ========================================================= */
 .site-foot {
-  padding: 26px 20px 30px;
-  text-align: center;
+  margin-top: -18px;
+  padding: 0 14px 18px;
+  text-align: right;
 }
 .site-foot a {
   display: inline-flex;
