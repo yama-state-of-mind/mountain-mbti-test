@@ -341,6 +341,8 @@ function findSecret(code) {
 }
 
 /* ---------- 結果表示 ---------- */
+let shareData = null;
+
 function showResult() {
   const { code, detail } = calcResult();
   const type = TYPES[code] || { name: "未知のタイプ", desc: "" };
@@ -437,12 +439,34 @@ function showResult() {
     })
     .join("");
 
-  const text = `私の登山タイプは【${code}：${type.name}】でした！ ${SHARE_HASHTAG}`;
+  /* ---------- シェア用の文言 ---------- */
+  const shareAnimal = secret ? secret.animal : (ch ? ch.animal : type.name);
+  const shareType = secret ? secret.typeName : type.name;
+  const shareCopy = secret ? secret.copy : type.copy;
+  const head = secret ? "【シークレット】" : "";
+  const text =
+    `${head}私の登山タイプは【${shareAnimal}｜${shareType}】でした！\n` +
+    `「${shareCopy}」\n${SHARE_HASHTAG}`;
+
   $("#btn-share").href =
     "https://twitter.com/intent/tweet?text=" +
-    encodeURIComponent(text) +
-    "&url=" +
-    encodeURIComponent(SITE_URL);
+    encodeURIComponent(text) + "&url=" + encodeURIComponent(SITE_URL);
+
+  $("#btn-line").href =
+    "https://social-plugins.line.me/lineit/share?url=" +
+    encodeURIComponent(SITE_URL) + "&text=" + encodeURIComponent(text);
+
+  /* 画像として保存するときに使う情報を控えておく */
+  shareData = {
+    animal: shareAnimal,
+    typeName: shareType,
+    copy: shareCopy,
+    code,
+    secret: !!secret,
+    band: secret ? "#E9EDF0" : g.band,
+    deep: secret ? "#A5761F" : g.deep,
+    svg: secret ? secretSVG(secret.id, "char") : characterSVG(code, "char"),
+  };
 
   showScreen("result");
   revealResult();
@@ -485,4 +509,80 @@ $("#btn-retry").addEventListener("click", () => {
   currentPage = 0;
   QUIZ = buildQuiz(); // 順番を引き直す
   showScreen("start");
+});
+
+/* =========================================================
+   結果を画像として保存する
+   キャラクターのSVGをそのまま canvas に描くので、
+   外部のライブラリは使わない
+   ========================================================= */
+function drawShareImage() {
+  return new Promise((resolve, reject) => {
+    if (!shareData) return reject(new Error("結果がありません"));
+
+    const cv = document.getElementById("share-canvas");
+    const W = cv.width, H = cv.height;
+    const g = cv.getContext("2d");
+
+    g.fillStyle = shareData.band;
+    g.fillRect(0, 0, W, H);
+
+    // キャラクターのSVGを画像に変換して中央へ
+    const svg = shareData.svg.replace(
+      "<svg ", '<svg xmlns="http://www.w3.org/2000/svg" width="520" height="520" '
+    );
+    const img = new Image();
+    img.onload = () => {
+      g.drawImage(img, (W - 560) / 2, 130, 560, 560);
+
+      g.textAlign = "center";
+      g.fillStyle = "#1E3A31";
+      g.font = '900 62px "Zen Maru Gothic", sans-serif';
+      g.fillText(shareData.animal, W / 2, 780);
+
+      g.fillStyle = "#7C8A83";
+      g.font = '700 30px "Zen Maru Gothic", sans-serif';
+      g.fillText(shareData.typeName, W / 2, 832);
+
+      g.fillStyle = "#46708F";
+      g.font = '700 34px "Zen Maru Gothic", sans-serif';
+      g.fillText("「" + shareData.copy + "」", W / 2, 905);
+
+      if (shareData.secret) {
+        g.fillStyle = "#C98F22";
+        g.font = '700 30px "Outfit", sans-serif';
+        g.fillText("SECRET！", W / 2, 90);
+      }
+
+      g.fillStyle = "#1E3A31";
+      g.font = '900 30px "Zen Maru Gothic", sans-serif';
+      g.fillText("登山タイプ診断", W / 2, 975);
+      g.fillStyle = "#9AA8A1";
+      g.font = '500 24px "Outfit", sans-serif';
+      g.fillText(SITE_URL.replace("https://", ""), W / 2, 1015);
+
+      resolve(cv);
+    };
+    img.onerror = () => reject(new Error("画像にできませんでした"));
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  });
+}
+
+document.getElementById("btn-save").addEventListener("click", async () => {
+  const btn = document.getElementById("btn-save");
+  const label = btn.querySelector("span");
+  const before = label.textContent;
+  label.textContent = "作成中…";
+  try {
+    const cv = await drawShareImage();
+    const url = cv.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `yamatype_${shareData.code}.png`;
+    a.click();
+    label.textContent = "保存しました";
+  } catch (e) {
+    label.textContent = "保存できません";
+  }
+  setTimeout(() => (label.textContent = before), 2200);
 });
