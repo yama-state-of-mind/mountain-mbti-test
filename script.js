@@ -454,13 +454,16 @@ function showResult() {
     `${head}私の登山タイプは【${shareAnimal}｜${shareType}】でした！\n` +
     `「${shareCopy}」\n${SHARE_HASHTAG}`;
 
+  // 共有先は、そのタイプの紹介ページ（診断していない人が開いても意味が通る）
+  const shareUrl = `${SITE_URL}/types.html?g=${code.slice(0, 2)}#${code}`;
+
   $("#btn-share").href =
     "https://twitter.com/intent/tweet?text=" +
-    encodeURIComponent(text) + "&url=" + encodeURIComponent(SITE_URL);
+    encodeURIComponent(text) + "&url=" + encodeURIComponent(shareUrl);
 
   $("#btn-line").href =
     "https://social-plugins.line.me/lineit/share?url=" +
-    encodeURIComponent(SITE_URL) + "&text=" + encodeURIComponent(text);
+    encodeURIComponent(shareUrl) + "&text=" + encodeURIComponent(text);
 
   track("diagnosis_complete", {
     type_code: code,
