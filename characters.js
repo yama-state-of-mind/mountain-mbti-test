@@ -679,6 +679,23 @@ ptarmigan: { animal: "ライチョウ（冬毛）", item: "首から下げたホ
 
 };
 
+
+/* ---------- 生息エリアのアイコン（タブ用） ---------- */
+const AREA_ICONS = {
+  PS: '<path d="M6 46 L20 20 L30 34 L40 10 L54 46 Z"/><path d="M40 10 L46 22 L34 26 Z" fill="#fff" opacity=".45"/>',
+  PG: '<path d="M4 44 L18 26 L28 36 L40 18 L56 44 Z" opacity=".32"/><path d="M4 44 Q18 30 30 38 Q42 24 56 40" stroke-width="4.4" fill="none" stroke-linecap="round" stroke="currentColor"/>',
+  ES: '<path d="M16 44 L24 44 L20 20 Z"/><path d="M12 34 L28 34 L20 14 Z"/><path d="M34 46 L42 46 L38 24 Z" opacity=".55"/><path d="M30 38 L46 38 L38 18 Z" opacity=".55"/>',
+  EG: '<path d="M4 42 Q16 34 30 38 Q44 42 56 34 L56 48 L4 48 Z"/><circle cx="44" cy="16" r="7" opacity=".45"/>',
+};
+
+/* エリアのアイコンSVGを返す */
+function areaIcon(key) {
+  const g = GROUPS[key];
+  if (!g || !AREA_ICONS[key]) return "";
+  return `<svg class="gtab-icon" viewBox="0 0 60 56" fill="${g.deep}" color="${g.deep}"
+               role="img" aria-label="${g.name}">${AREA_ICONS[key]}</svg>`;
+}
+
 /* シークレットのSVGを組み立てる（背景の情景を円で切り抜く） */
 function secretSVG(id, cls) {
   const c = SECRET_CHARACTERS[id];

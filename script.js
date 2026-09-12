@@ -410,6 +410,7 @@ function showResult() {
       .map((m) => `
         <div class="mt">
           <p class="mt-name">${m.name}${m.note ? '<span class="mt-flag">要注意</span>' : ""}</p>
+          ${m.pref ? `<p class="mt-pref">（${m.pref}）</p>` : ""}
           <p class="mt-why">${m.why}</p>
         </div>`)
       .join("");

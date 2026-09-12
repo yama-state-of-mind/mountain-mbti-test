@@ -50,7 +50,7 @@ const codesOf = (key) => Object.keys(TYPES).filter((c) => c.slice(0, 2) === key)
 document.getElementById("group-tabs").innerHTML = ORDER.map((key) => {
   const g = GROUPS[key];
   return `<button class="gtab" data-g="${key}">
-    ${characterSVG(codesOf(key)[0], "char gtab-char", true)}
+    ${areaIcon(key)}
     <span class="gtab-name">${g.name}</span>
   </button>`;
 }).join("");
@@ -157,6 +157,7 @@ function typeCard(code, asSecret) {
           ${mts.map((m) => `
             <div class="mt">
               <p class="mt-name">${m.name}${m.note ? '<span class="mt-flag">要注意</span>' : ""}</p>
+              ${m.pref ? `<p class="mt-pref">（${m.pref}）</p>` : ""}
               <p class="mt-why">${m.why}</p>
             </div>`).join("")}
         </div>
@@ -246,7 +247,7 @@ document.getElementById("group-body").addEventListener("click", (e) => {
   showGroup(code.slice(0, 2), code);
 });
 
-/* ---------- キャラクターを2秒以内に3回押すと、同じタイプの隠れた姿にかわる ----------
+/* ---------- キャラクターを2秒以内に2回押すと、同じタイプの隠れた姿にかわる ----------
    タップの記録はカード自身に持たせる（差し替え時に自然にリセットされる） */
 document.getElementById("group-body").addEventListener("click", (e) => {
   const wrap = e.target.closest(".ti-char-wrap");
@@ -262,7 +263,7 @@ document.getElementById("group-body").addEventListener("click", (e) => {
     .filter((t) => now - t < 2000);
   taps.push(now);
 
-  if (taps.length < 3) {
+  if (taps.length < 2) {
     card.dataset.taps = taps.join(",");
     return;
   }

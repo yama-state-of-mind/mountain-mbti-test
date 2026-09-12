@@ -1454,13 +1454,15 @@ body {
 .result-row {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 14px;
   text-align: left;
   margin-top: 6px;
 }
+.result-txt { flex: 0 1 auto; }
 .result-row .result-char { margin: 0; flex-shrink: 0; }
 .result-row .result-char .char-lg { width: 128px; display: block; }
-.result-txt { flex: 1; min-width: 0; }
+
 .result-row .result-animal { font-size: 27px; margin: 0; line-height: 1.25; }
 .result.is-secret .result-row .result-animal { font-size: 21px; }
 .result-row .result-name { font-size: 12.5px; margin-top: 1px; }
@@ -1483,7 +1485,7 @@ body {
 }
 
 /* 詳細カード：コードと生息エリアを横並びの下へ */
-.ti-id { text-align: center; margin-top: 12px; }
+.ti-id { text-align: left; margin-top: 12px; }
 .tc-area { margin-left: 8px; vertical-align: 1px; }
 
 /* おすすめの山と相性の文字を少し大きく */
@@ -1500,3 +1502,15 @@ body {
 .type-item .match-row .match-name { font-size: 13.5px; }
 .result .match-row .match-label,
 .type-item .match-row .match-label { font-size: 11px; }
+
+/* エリアタブのアイコン */
+.gtab-icon { width: 40px; height: 38px; display: block; margin: 0 auto 2px; }
+
+/* おすすめの山：県名 */
+.mt-pref {
+  font-size: 10.5px;
+  color: var(--stone);
+  text-align: center;
+  margin-top: 1px;
+  line-height: 1.4;
+}
