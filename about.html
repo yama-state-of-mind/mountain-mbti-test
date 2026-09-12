@@ -82,8 +82,9 @@ document.getElementById("axis-table").innerHTML = AXES.map((ax) => `
   <div class="ax-item">
     <div class="ax-row">
       <div class="ax-end l">
-        <span class="ax-ltr">${ax.a}</span>
         <span class="ax-word">${ax.aName}</span>
+        <span class="ax-ltr">${ax.a}</span>
+        <span class="ax-en">${ax.aEn}</span>
       </div>
       <div class="ax-mid">
         <span class="ax-title">${ax.title}</span>
@@ -94,8 +95,9 @@ document.getElementById("axis-table").innerHTML = AXES.map((ax) => `
         </svg>
       </div>
       <div class="ax-end r">
-        <span class="ax-ltr">${ax.b}</span>
         <span class="ax-word">${ax.bName}</span>
+        <span class="ax-ltr">${ax.b}</span>
+        <span class="ax-en">${ax.bEn}</span>
       </div>
     </div>
     <p class="ax-memo">${AXIS_MEMO[ax.id]}</p>

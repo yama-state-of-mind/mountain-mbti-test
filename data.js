@@ -12,10 +12,10 @@ const SHARE_HASHTAG = "#登山タイプ診断";
 /* ---------- 評価軸の定義 ----------
    a: 1文字目側 / b: 2文字目側 */
 const AXES = [
-  { id: "PE", a: "P", b: "E", aName: "ピークハント", bName: "エンジョイ",   title: "目的" },
-  { id: "SG", a: "S", b: "G", aName: "ソロ",         bName: "グループ",     title: "仲間" },
-  { id: "LF", a: "L", b: "F", aName: "計画・データ", bName: "フィーリング", title: "計画" },
-  { id: "CA", a: "C", b: "A", aName: "慎重・安全",   bName: "挑戦・冒険",   title: "リスク" },
+  { id: "PE", a: "P", b: "E", aName: "ピークハント", bName: "エンジョイ",   aEn: "Peak hunt", bEn: "Enjoy",       title: "目的" },
+  { id: "SG", a: "S", b: "G", aName: "ソロ",       bName: "グループ",     aEn: "Solo",      bEn: "Group",       title: "仲間" },
+  { id: "LF", a: "L", b: "F", aName: "計画的",     bName: "フィーリング", aEn: "Logic",     bEn: "Feeling",     title: "計画" },
+  { id: "CA", a: "C", b: "A", aName: "慎重",       bName: "挑戦的",       aEn: "Cautious",  bEn: "Adventurous", title: "リスク" },
 ];
 
 /* ---------- 質問リスト（全12問） ----------
@@ -46,7 +46,7 @@ const QUESTIONS = [
     a: "とりあえず自分が行ける日を押さえる",
     b: "誰か誘えそうな人がいないか考える" },
 
-  // 軸3 計画（L 計画・データ / F フィーリング）
+  // 軸3 計画（L 計画的 / F フィーリング）
   { axis: "LF", text: "登山前日の夜、していることは？",
     a: "地図を開いて、分岐・水場・休憩ポイントを頭に入れる",
     b: "とりあえずザックに荷物を詰めて、あとは寝る" },
@@ -57,7 +57,7 @@ const QUESTIONS = [
     a: "どこで取り戻すか、どこを削るかを組み立て直す",
     b: "ズレたらズレたで、その日の流れに任せる" },
 
-  // 軸4 リスク（C 慎重・安全 / A 挑戦・冒険）
+  // 軸4 リスク（C 慎重 / A 挑戦的）
   { axis: "CA", rev: true, text: "週末の降水確率が50%。金曜の夜のあなたは？",
     a: "当日の朝まで粘る。行けそうなら出発する",
     b: "早めに中止を決めて、別の予定を入れてしまう" },

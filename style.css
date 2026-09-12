@@ -912,11 +912,11 @@ body {
 .ax-item:first-child { border-top: none; padding-top: 4px; }
 
 .ax-row { display: flex; align-items: center; gap: 10px; }
-.ax-end { flex-shrink: 0; width: 74px; text-align: center; }
+.ax-end { flex-shrink: 0; width: 84px; text-align: center; }
 .ax-ltr {
   display: block;
   font-family: "Outfit", var(--font);
-  font-size: 40px;
+  font-size: 34px;
   font-weight: 700;
   line-height: .95;
 }
@@ -926,9 +926,18 @@ body {
   display: block;
   font-size: 10.5px;
   font-weight: 700;
-  margin-top: 5px;
+  margin-bottom: 3px;
   line-height: 1.35;
   color: var(--stone);
+}
+.ax-en {
+  display: block;
+  font-family: "Outfit", var(--font);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: .04em;
+  color: #A9B5AE;
+  margin-top: 2px;
 }
 .ax-mid { flex: 1; min-width: 0; text-align: center; }
 .ax-title {
