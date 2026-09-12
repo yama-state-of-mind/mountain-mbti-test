@@ -181,11 +181,11 @@ PGLC: { animal: "ライチョウ", item: "首から下げたホイッスル", sv
   <path d="M64 56 A 5 4 0 0 1 74 56 Z" fill="#D8341F"/>
   <path d="M86 56 A 5 4 0 0 1 96 56 Z" fill="#D8341F"/>
   <path d="M75 70 L85 70 L80 78 Z" fill="#4A453A"/>
-  <path d="M62 78 Q56 94 70 102" stroke="#D8341F" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M98 78 Q104 94 90 102" stroke="#D8341F" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <rect x="71" y="98" width="18" height="10" rx="5" fill="#B98C2E"/>
-  <rect x="71" y="98" width="18" height="4.4" rx="2.2" fill="#D9AC4E"/>
-  <circle cx="85" cy="103" r="2.2" fill="#7A5A15"/>` },
+  <path d="M62 78 Q56 96 78 104" stroke="#D8341F" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M98 78 Q104 96 82 104" stroke="#D8341F" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <rect x="78" y="102" width="4" height="5" rx="1.3" fill="#B87A32"/>
+  <rect x="74" y="105" width="12" height="17" rx="3" fill="#E0A055"/>
+  <rect x="74" y="111" width="12" height="4" fill="#A96C28"/>` },
 
 /* 6 ホシガラス｜星の弧　キリ目20% */
 PGLA: { animal: "ホシガラス", item: "肩に掛けたザイル", svg: `
@@ -625,39 +625,17 @@ ptarmigan: { animal: "ライチョウ（冬毛）", item: "首から下げたホ
     <circle cx="118" cy="16" r="2"/><circle cx="20" cy="72" r="2.2"/><circle cx="142" cy="66" r="2.6"/>
   </g>
   <ellipse cx="110" cy="110" rx="18" ry="9" fill="#E4EBF0" transform="rotate(20 110 110)"/>
-  <!-- 逆立った冬毛（外周の丸いコブ） -->
-  <circle cx="80.0" cy="68.0" r="9.5" fill="#EFF6FA"/>
-  <circle cx="94.3" cy="71.3" r="9.5" fill="#EFF6FA"/>
-  <circle cx="105.8" cy="80.4" r="9.5" fill="#EFF6FA"/>
-  <circle cx="112.2" cy="93.7" r="9.5" fill="#EFF6FA"/>
-  <circle cx="112.2" cy="108.3" r="9.5" fill="#EFF6FA"/>
-  <circle cx="105.8" cy="121.6" r="9.5" fill="#EFF6FA"/>
-  <circle cx="94.3" cy="130.7" r="9.5" fill="#EFF6FA"/>
-  <circle cx="80.0" cy="134.0" r="9.5" fill="#EFF6FA"/>
-  <circle cx="65.7" cy="130.7" r="9.5" fill="#EFF6FA"/>
-  <circle cx="54.2" cy="121.6" r="9.5" fill="#EFF6FA"/>
-  <circle cx="47.8" cy="108.3" r="9.5" fill="#EFF6FA"/>
-  <circle cx="47.8" cy="93.7" r="9.5" fill="#EFF6FA"/>
-  <circle cx="54.2" cy="80.4" r="9.5" fill="#EFF6FA"/>
-  <circle cx="65.7" cy="71.3" r="9.5" fill="#EFF6FA"/>
   <circle cx="80" cy="101" r="33" fill="#FDFEFE"/>
   <ellipse cx="80" cy="108" rx="21" ry="20" fill="#FFFFFF"/>
+  <g fill="none" stroke="#C6D2DA" stroke-width="2.6" stroke-linecap="round">
+    <path d="M58 96 Q64 100 70 96"/><path d="M74 96 Q80 100 86 96"/><path d="M90 96 Q96 100 102 96"/>
+    <path d="M66 108 Q72 112 78 108"/><path d="M82 108 Q88 112 94 108"/>
+    <path d="M58 120 Q64 124 70 120"/><path d="M74 120 Q80 124 86 120"/><path d="M90 120 Q96 124 102 120"/>
+  </g>
   <ellipse cx="54" cy="102" rx="11" ry="17" fill="#F0F5F8" transform="rotate(-8 54 102)"/>
   <ellipse cx="106" cy="102" rx="11" ry="17" fill="#F0F5F8" transform="rotate(8 106 102)"/>
   <ellipse cx="70" cy="128" rx="10" ry="10" fill="#F2F7FA"/>
   <ellipse cx="90" cy="128" rx="10" ry="10" fill="#F2F7FA"/>
-  <!-- 頭のもふもふ -->
-  <circle cx="80.0" cy="31.0" r="8" fill="#EFF6FA"/>
-  <circle cx="94.6" cy="35.3" r="8" fill="#EFF6FA"/>
-  <circle cx="104.6" cy="46.8" r="8" fill="#EFF6FA"/>
-  <circle cx="106.7" cy="61.8" r="8" fill="#EFF6FA"/>
-  <circle cx="100.4" cy="75.7" r="8" fill="#EFF6FA"/>
-  <circle cx="87.6" cy="83.9" r="8" fill="#EFF6FA"/>
-  <circle cx="72.4" cy="83.9" r="8" fill="#EFF6FA"/>
-  <circle cx="59.6" cy="75.7" r="8" fill="#EFF6FA"/>
-  <circle cx="53.3" cy="61.8" r="8" fill="#EFF6FA"/>
-  <circle cx="55.4" cy="46.8" r="8" fill="#EFF6FA"/>
-  <circle cx="65.4" cy="35.3" r="8" fill="#EFF6FA"/>
   <circle cx="80" cy="58" r="27" fill="#FFFFFF"/>
   <circle cx="69" cy="57" r="5" fill="#1E1A16"/>
   <circle cx="91" cy="57" r="5" fill="#1E1A16"/>
@@ -666,11 +644,11 @@ ptarmigan: { animal: "ライチョウ（冬毛）", item: "首から下げたホ
   <path d="M64 52 A 5 4 0 0 1 74 52 Z" fill="#D8341F"/>
   <path d="M86 52 A 5 4 0 0 1 96 52 Z" fill="#D8341F"/>
   <path d="M75 66 L85 66 L80 74 Z" fill="#4A453A"/>
-  <path d="M62 74 Q56 90 70 98" stroke="#D8341F" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M98 74 Q104 90 90 98" stroke="#D8341F" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <rect x="71" y="94" width="18" height="10" rx="5" fill="#B98C2E"/>
-  <rect x="71" y="94" width="18" height="4.4" rx="2.2" fill="#D9AC4E"/>
-  <circle cx="85" cy="99" r="2.2" fill="#7A5A15"/>
+  <path d="M62 74 Q56 92 78 100" stroke="#D8341F" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M98 74 Q104 92 82 100" stroke="#D8341F" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <rect x="78" y="98" width="4" height="5" rx="1.3" fill="#B87A32"/>
+  <rect x="74" y="101" width="12" height="17" rx="3" fill="#E0A055"/>
+  <rect x="74" y="107" width="12" height="4" fill="#A96C28"/>
   <path d="M0 128 Q30 116 62 122 Q96 128 128 118 Q148 112 160 118 L160 160 L0 160 Z" fill="#EDF4F8"/>
   <path d="M0 138 Q40 130 78 136 Q118 142 160 132 L160 160 L0 160 Z" fill="#FBFDFE"/>
   <g fill="#FFFFFF" opacity=".9">

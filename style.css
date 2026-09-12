@@ -1605,9 +1605,16 @@ body {
   box-shadow: 0 -2px 14px rgba(30, 58, 49, .12);
   border-radius: 16px 16px 0 0;
 }
-.share-tx { flex: 1; min-width: 0; text-align: left; line-height: 1.3; }
-.share-tx b { font-size: 11px; font-weight: 900; }
-.share-tx span { font-size: 9px; color: var(--stone); font-weight: 500; }
+.share-lf {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 9px;
+  color: var(--stone);
+}
+.share-rt { white-space: nowrap; font-size: 9.5px; font-weight: 700; margin-right: 2px; }
 .share-ic {
   flex-shrink: 0;
   width: 23px;
@@ -1627,8 +1634,23 @@ body {
 /* バーの高さぶん、下に余白を作る */
 #screen-result { padding-bottom: 52px; }
 @media (max-width: 380px) {
-  .share-tx span { font-size: 8.5px; }
+  .share-lf { font-size: 8.5px; }
 }
 
 /* 詳細カード：持ちものを4軸タグと同じ行に */
 .ax-item b { font-family: var(--font); font-size: 10px; margin-right: 5px; }
+
+/* 診断の仕組み：目的×仲間と生息エリアの対応 */
+.area-rows { display: flex; flex-direction: column; gap: 7px; margin-top: 12px; }
+.area-row { display: flex; align-items: center; font-size: 12px; padding: 0 2px; }
+.ar-cmb { flex: 1; color: #3d4d46; }
+.ar-arrow { color: #B9C6BF; margin: 0 10px; }
+.ar-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  padding: 4px 12px 4px 8px;
+}
+.ar-chip b { font-size: 12.5px; font-weight: 900; }
+.ar-chip .gtab-icon { width: 18px; height: 17px; margin: 0; }

@@ -41,9 +41,9 @@
 
     <section class="legend legend-plain">
       <h2>生息エリアについて</h2>
-      <p>16タイプは、さらに4つの生息エリアに分かれます。<b>目的</b>と<b>仲間</b>の組み合わせで、
-         岩稜帯・稜線・樹林帯・高原のどこかに住み分けています。
+      <p>目的・仲間の組み合わせで、16タイプを4つの生息エリアに分類しています。
          同じエリアなら山での過ごし方が近く、違うエリアなら見ている景色が違います。</p>
+      <div class="area-rows" id="area-rows"><!-- 4エリアの対応 --></div>
     </section>
 
     <div class="matrix">
@@ -112,6 +112,21 @@ document.getElementById("axis-table").innerHTML = AXES.map((ax) => `
   </div>`).join("");
 
 /* 目的（縦）× 仲間（横）の4象限。左上から 孤峰・稜線・静林・陽だまり */
+/* 目的×仲間と生息エリアの対応 */
+document.getElementById("area-rows").innerHTML = [
+  ["PS", "ピークハント", "ソロ"], ["PG", "ピークハント", "グループ"],
+  ["ES", "エンジョイ", "ソロ"],   ["EG", "エンジョイ", "グループ"],
+].map(([key, aj, bj]) => {
+  const g = GROUPS[key];
+  return `<div class="area-row">
+    <span class="ar-cmb">${aj} × ${bj}</span>
+    <span class="ar-arrow">→</span>
+    <span class="ar-chip" style="background:${g.band}">
+      ${areaIcon(key)}<b style="color:${g.deep}">${g.name}</b>
+    </span>
+  </div>`;
+}).join("");
+
 document.getElementById("matrix").insertAdjacentHTML("beforeend", MATRIX_ORDER.map((key) => {
   const g = GROUPS[key];
   const side = (key === "PG" || key === "EG") ? "l" : "r";
