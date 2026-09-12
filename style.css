@@ -1585,8 +1585,8 @@ body {
 }
 .share-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 .sbtn {
   display: flex;
@@ -1608,11 +1608,4 @@ body {
 .sbtn:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
 .sbtn.sx { background: #14171A; }
 .sbtn.sl { background: #06C755; }
-.sbtn.sd { background: var(--pine); }
 .sbtn:hover { filter: brightness(1.12); }
-.share-hint {
-  font-size: 10.5px;
-  color: var(--stone);
-  margin-top: 9px;
-  line-height: 1.6;
-}
