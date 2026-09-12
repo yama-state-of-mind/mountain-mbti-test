@@ -186,21 +186,6 @@
       </section>
 
       <div class="result-actions">
-        <p class="share-label">結果をシェアする</p>
-        <div class="share-row">
-          <a class="sbtn sx" id="btn-share" href="#" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-6.4L6.4 22H3.2l7.3-8.3L1.6 2H8l4.4 5.9L18.9 2zm-1.1 18h1.7L7.1 3.9H5.3L17.8 20z"/></svg>
-            <span>X</span>
-          </a>
-          <a class="sbtn sl" id="btn-line" href="#" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.5 2 2 5.6 2 10.1c0 4 3.6 7.4 8.4 8 .3.1.8.2.9.5.1.3.1.7 0 1l-.1.9c0 .3-.2 1 .9.6 1.1-.5 5.9-3.5 8.1-6 1.5-1.6 2.2-3.3 2.2-5C22.5 5.6 17.5 2 12 2z"/></svg>
-            <span>LINE</span>
-          </a>
-        </div>
-        <a class="btn btn-share" id="btn-share-old" href="#" target="_blank" rel="noopener" hidden>
-          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-6.4L6.4 22H3.2l7.3-8.3L1.6 2H8l4.4 5.9L18.9 2zm-1.1 18h1.7L7.1 3.9H5.3L17.8 20z"/></svg>
-          結果をシェアする
-        </a>
         <button class="btn btn-ghost" id="btn-retry">もう一度診断する</button>
         <p class="hero-link">
           <a href="types.html?g=PS">16タイプの詳細</a>
@@ -208,8 +193,22 @@
         </p>
       </div>
     </div>
+
   </section>
 
+</div>
+
+<div class="share-bar" id="share-bar" hidden>
+      <div class="share-tx">
+        <p class="share-t1">結果をシェア</p>
+        <p class="share-t2">友達がどの動物か、聞いてみませんか？</p>
+      </div>
+      <a class="share-ic sx" id="btn-share" href="#" target="_blank" rel="noopener" aria-label="Xでシェア">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-6.4L6.4 22H3.2l7.3-8.3L1.6 2H8l4.4 5.9L18.9 2zm-1.1 18h1.7L7.1 3.9H5.3L17.8 20z"/></svg>
+      </a>
+      <a class="share-ic sl" id="btn-line" href="#" target="_blank" rel="noopener" aria-label="LINEで送る">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.5 2 2 5.6 2 10.1c0 4 3.6 7.4 8.4 8 .3.1.8.2.9.5.1.3.1.7 0 1l-.1.9c0 .3-.2 1 .9.6 1.1-.5 5.9-3.5 8.1-6 1.5-1.6 2.2-3.3 2.2-5C22.5 5.6 17.5 2 12 2z"/></svg>
+      </a>
 </div>
 
 <script src="data.js"></script>

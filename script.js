@@ -454,6 +454,13 @@ function showResult() {
     `${head}私の登山タイプは【${shareAnimal}｜${shareType}】でした！\n` +
     `「${shareCopy}」\n${SHARE_HASHTAG}`;
 
+  // シェアのバーは生息エリアの色に合わせ、結果画面でだけ出す
+  const bar = $("#share-bar");
+  if (bar) {
+    bar.style.background = g.band;
+    bar.hidden = false;
+  }
+
   // 共有先は、そのタイプの紹介ページ（診断していない人が開いても意味が通る）
   const shareUrl = `${SITE_URL}/types.html?g=${code.slice(0, 2)}#${code}`;
 
@@ -512,6 +519,8 @@ function revealResult() {
 /* ---------- もう一度 ---------- */
 $("#btn-retry").addEventListener("click", () => {
   track("quiz_retry");
+  const bar = $("#share-bar");
+  if (bar) bar.hidden = true;
   answers.fill(null);
   currentPage = 0;
   QUIZ = buildQuiz(); // 順番を引き直す
