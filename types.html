@@ -139,7 +139,6 @@ function typeCard(code, asSecret) {
           <h3 class="ti-name">${c.animal}</h3>
           <p class="tc-type">${sec ? sec.typeName : t.name}</p>
           <p class="tc-copy">「${sec ? sec.copy : t.copy}」</p>
-          <p class="ti-item"><b>持ちもの</b>${c.item}</p>
         </div>
       </header>
       <p class="ti-id">
@@ -147,7 +146,7 @@ function typeCard(code, asSecret) {
         <span class="tc-area" style="color:${g.deep}">生息エリア：${g.name}</span>
       </p>
 
-      <div class="ti-axes">${axisText}</div>
+      <div class="ti-axes">${axisText}<span class="ax ax-item"><b>持ちもの</b>${c.item}</span></div>
 
       <section class="ti-block">
         <h4 class="ti-label">特徴</h4>
