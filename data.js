@@ -4,7 +4,7 @@
    ========================================================= */
 
 /* ---------- 設定 ---------- */
-const QUESTIONS_PER_PAGE = 7;  // 1ページに表示する質問数
+const QUESTIONS_PER_PAGE = 6;  // 1ページに表示する質問数
 const SHUFFLE = true;          // 質問の順番をランダムにする（false で定義順に固定）
 const SITE_URL = "https://yamatype16.vercel.app";
 const SHARE_HASHTAG = "#登山タイプ診断";

@@ -30,26 +30,21 @@ function shuffleQuestions(list) {
    専用2問は判定に使わないので、同じ軸が隣り合わない制約の対象外 */
 function buildQuiz() {
   const list = shuffleQuestions(QUESTIONS);
-  if (typeof SECRETS === "undefined") return list;
+  if (typeof SECRETS === "undefined" || !SECRETS.length) return list;
 
-  // 端と端に寄りすぎないよう、前半と後半に1問ずつ散らす
-  const half = Math.ceil(list.length / 2);
-  const slots = [
-    1 + Math.floor(Math.random() * (half - 1)),
-    half + 1 + Math.floor(Math.random() * (list.length - half - 1)),
-  ];
-  const picks = SECRETS.map((x) => x.question).sort(() => Math.random() - 0.5);
+  // シークレット専用の問題は、毎回どちらか1問だけを混ぜる
+  const pick = SECRETS[Math.floor(Math.random() * SECRETS.length)].question;
+  const slot = 1 + Math.floor(Math.random() * (list.length - 1));
 
   const out = list.slice();
-  out.splice(slots[1], 0, picks[1]);
-  out.splice(slots[0], 0, picks[0]);
+  out.splice(slot, 0, pick);
   return out;
 }
 
 let QUIZ = buildQuiz();
 const answers = new Array(QUESTIONS.length).fill(null); // 0〜5（0=A強, 5=B強）
 let currentPage = 0;
-const totalPages = Math.ceil(QUIZ.length / QUESTIONS_PER_PAGE);
+const totalPages = 2;   // 1ページ目6問、2ページ目は残り全部
 
 const $ = (sel) => document.querySelector(sel);
 const screens = {
@@ -114,7 +109,7 @@ function renderPage() {
   page.classList.add("page-in");
 
   const start = currentPage * QUESTIONS_PER_PAGE;
-  const end = Math.min(start + QUESTIONS_PER_PAGE, QUIZ.length);
+  const end = currentPage === totalPages - 1 ? QUIZ.length : Math.min(start + QUESTIONS_PER_PAGE, QUIZ.length);
 
   for (let i = start; i < end; i++) {
     const q = QUIZ[i];
@@ -171,7 +166,7 @@ function scrollToNext(fromIndex) {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const pageStart = currentPage * QUESTIONS_PER_PAGE;
-  const pageEnd = Math.min(pageStart + QUESTIONS_PER_PAGE, QUIZ.length);
+  const pageEnd = currentPage === totalPages - 1 ? QUIZ.length : Math.min(pageStart + QUESTIONS_PER_PAGE, QUIZ.length);
 
   let target = null;
   for (let i = fromIndex + 1; i < pageEnd; i++) {
@@ -242,7 +237,7 @@ $("#btn-back").addEventListener("click", () => {
 
 $("#btn-next").addEventListener("click", () => {
   const start = currentPage * QUESTIONS_PER_PAGE;
-  const end = Math.min(start + QUESTIONS_PER_PAGE, QUIZ.length);
+  const end = currentPage === totalPages - 1 ? QUIZ.length : Math.min(start + QUESTIONS_PER_PAGE, QUIZ.length);
   for (let i = start; i < end; i++) {
     if (answers[i] === null) {
       const card = document.querySelector(`.q-card[data-index="${i}"]`);
@@ -367,6 +362,8 @@ function showResult() {
   $("#result-animal").textContent = secret ? secret.animal : (ch ? ch.animal : type.name);
   $("#result-name").textContent = secret ? secret.typeName : type.name;
   $("#secret-badge").hidden = !secret;
+  $("#secret-lead").hidden = !secret;
+  $("#secret-spark").hidden = !secret;
   $("#secret-note").hidden = !secret;
   if (secret) $("#secret-note").textContent = secret.note;
   document.querySelector(".result").classList.toggle("is-secret", !!secret);
