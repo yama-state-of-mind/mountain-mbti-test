@@ -274,8 +274,8 @@ function flipAxis(code, axisIndex) {
 function findMatches(code, secret) {
   const w = (typeof MATCH_WHY !== "undefined" && MATCH_WHY[code]) || {};
   const list = [
-    { label: "息が合う相手",     code: flipAxis(code, 2), why: w.calm || "" },
-    { label: "刺激をくれる相手", code: flipAxis(code, 0), why: w.spark || "" },
+    { label: "補い合える相手",     code: flipAxis(code, 2), why: w.calm || "" },
+    { label: "歩き方が似ている相手", code: flipAxis(code, 0), why: w.spark || "" },
   ];
 
   if (secret) {
@@ -288,7 +288,7 @@ function findMatches(code, secret) {
   } else {
     // 目的と仲間の両方が逆の相手。相手から見てもあなたが出る
     list.push({
-      label: "山の見方が正反対の相手",
+      label: "刺激をくれる相手",
       code: flipAxis(flipAxis(code, 0), 1),
       why: w.opp || "",
     });

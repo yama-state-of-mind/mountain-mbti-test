@@ -1514,3 +1514,9 @@ body {
   margin-top: 1px;
   line-height: 1.4;
 }
+
+/* おすすめの山：5座を3列2行で高さを揃える */
+.result .mt-row,
+.type-item .mt-row { align-items: stretch; }
+.result .mt,
+.type-item .mt { display: flex; flex-direction: column; }
