@@ -463,7 +463,11 @@ function showResult() {
     copy: shareCopy,
     code,
     secret: !!secret,
-    band: secret ? "#E9EDF0" : g.band,
+    area: g.name,
+    item: secret ? SECRET_CHARACTERS[secret.id].item : (ch ? ch.item : ""),
+    tags: detail.map((d) => (d.aWins
+      ? { l: d.a, n: d.aName } : { l: d.b, n: d.bName })),
+    band: g.band,
     deep: secret ? "#A5761F" : g.deep,
     svg: secret ? secretSVG(secret.id, "char") : characterSVG(code, "char"),
   };
@@ -527,45 +531,132 @@ function drawShareImage() {
     g.fillStyle = shareData.band;
     g.fillRect(0, 0, W, H);
 
-    // キャラクターのSVGを画像に変換して中央へ
     const svg = shareData.svg.replace(
-      "<svg ", '<svg xmlns="http://www.w3.org/2000/svg" width="520" height="520" '
+      "<svg ", '<svg xmlns="http://www.w3.org/2000/svg" width="420" height="420" '
     );
     const img = new Image();
     img.onload = () => {
-      g.drawImage(img, (W - 560) / 2, 130, 560, 560);
+      let y = 90;
 
-      g.textAlign = "center";
-      g.fillStyle = "#1E3A31";
-      g.font = '900 62px "Zen Maru Gothic", sans-serif';
-      g.fillText(shareData.animal, W / 2, 780);
-
-      g.fillStyle = "#7C8A83";
-      g.font = '700 30px "Zen Maru Gothic", sans-serif';
-      g.fillText(shareData.typeName, W / 2, 832);
-
-      g.fillStyle = "#46708F";
-      g.font = '700 34px "Zen Maru Gothic", sans-serif';
-      g.fillText("「" + shareData.copy + "」", W / 2, 905);
-
+      // シークレットのときだけ、金色の粒を散らす
       if (shareData.secret) {
-        g.fillStyle = "#C98F22";
-        g.font = '700 30px "Outfit", sans-serif';
-        g.fillText("SECRET！", W / 2, 90);
+        const dots = [
+          [90, 150, 26], [990, 120, 20], [140, 620, 22], [960, 560, 26],
+          [540, 60, 18], [250, 900, 20], [830, 880, 24], [60, 420, 16], [1020, 360, 18],
+        ];
+        dots.forEach(([dx, dy, r]) => {
+          const gr = g.createRadialGradient(dx, dy, 0, dx, dy, r);
+          gr.addColorStop(0, "rgba(240,200,96,.95)");
+          gr.addColorStop(1, "rgba(240,200,96,0)");
+          g.fillStyle = gr;
+          g.beginPath();
+          g.arc(dx, dy, r, 0, Math.PI * 2);
+          g.fill();
+        });
+        // 中央から広がる淡い光
+        const glow = g.createRadialGradient(W / 2, H / 2, 120, W / 2, H / 2, W * 0.72);
+        glow.addColorStop(0, "rgba(224,163,59,0)");
+        glow.addColorStop(1, "rgba(224,163,59,.20)");
+        g.fillStyle = glow;
+        g.fillRect(0, 0, W, H);
       }
 
+      if (shareData.secret) {
+        pill(g, W / 2, y, "SECRET！", 30, "#C98F22", "#4A3410", 26, 700, "Outfit");
+        y += 62;
+      }
+      g.textAlign = "center";
+      g.fillStyle = "#7C8A83";
+      g.font = '500 26px "Zen Maru Gothic", sans-serif';
+      g.fillText("あなたの登山タイプは", W / 2, y + 20);
+
+      // キャラクターと名前を横に並べる
+      const top = y + 60;
+      g.drawImage(img, 70, top, 420, 420);
+      g.textAlign = "left";
       g.fillStyle = "#1E3A31";
-      g.font = '900 30px "Zen Maru Gothic", sans-serif';
-      g.fillText("登山タイプ診断", W / 2, 975);
+      g.font = '900 58px "Zen Maru Gothic", sans-serif';
+      g.fillText(shareData.animal, 530, top + 170);
+      g.fillStyle = "#7C8A83";
+      g.font = '700 27px "Zen Maru Gothic", sans-serif';
+      g.fillText(shareData.typeName, 530, top + 216);
+      g.fillStyle = "#46708F";
+      g.font = '700 30px "Zen Maru Gothic", sans-serif';
+      g.fillText("「" + shareData.copy + "」", 530, top + 276);
+
+      // コードと生息エリア
+      g.textAlign = "center";
+      let cy = top + 470;
+      const codeW = shareData.code.length * 24 + 34;
+      round(g, W / 2 - codeW - 100, cy - 26, codeW, 46, 10, shareData.deep);
+      g.fillStyle = "#fff";
+      g.font = '700 24px "Outfit", sans-serif';
+      g.fillText(shareData.code, W / 2 - codeW / 2 - 100, cy + 6);
+      g.textAlign = "left";
+      g.fillStyle = shareData.deep;
+      g.font = '900 25px "Zen Maru Gothic", sans-serif';
+      g.fillText("生息エリア：" + shareData.area, W / 2 - 80, cy + 6);
+
+      // 4軸タグ
+      cy += 82;
+      const tags = shareData.tags.map((t) => t.l + " " + t.n);
+      let tw = tags.map((t) => t.length * 19 + 46);
+      let total = tw.reduce((a, b) => a + b, 0) + 12 * 3;
+      let x = (W - total) / 2;
+      tags.forEach((t, i) => {
+        round(g, x, cy - 26, tw[i], 50, 25, "rgba(255,255,255,.8)");
+        g.fillStyle = "#1E3A31";
+        g.font = '700 22px "Zen Maru Gothic", sans-serif';
+        g.textAlign = "center";
+        g.fillText(t, x + tw[i] / 2, cy + 6);
+        x += tw[i] + 12;
+      });
+
+      // 持ちもの
+      cy += 74;
+      const it = "持ちもの　" + shareData.item;
+      const iw = it.length * 21 + 50;
+      round(g, (W - iw) / 2, cy - 26, iw, 50, 25, "rgba(255,255,255,.8)");
+      g.fillStyle = "#3d4d46";
+      g.font = '700 22px "Zen Maru Gothic", sans-serif';
+      g.textAlign = "center";
+      g.fillText(it, W / 2, cy + 6);
+
+      g.fillStyle = "#1E3A31";
+      g.font = '900 28px "Zen Maru Gothic", sans-serif';
+      g.fillText("登山タイプ診断", W / 2, H - 66);
       g.fillStyle = "#9AA8A1";
-      g.font = '500 24px "Outfit", sans-serif';
-      g.fillText(SITE_URL.replace("https://", ""), W / 2, 1015);
+      g.font = '500 23px "Outfit", sans-serif';
+      g.fillText(SITE_URL.replace("https://", ""), W / 2, H - 30);
 
       resolve(cv);
     };
     img.onerror = () => reject(new Error("画像にできませんでした"));
     img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   });
+}
+
+/* 角丸の四角を描く */
+function round(g, x, y, w, h, r, fill) {
+  g.fillStyle = fill;
+  g.beginPath();
+  g.moveTo(x + r, y);
+  g.arcTo(x + w, y, x + w, y + h, r);
+  g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r);
+  g.arcTo(x, y, x + w, y, r);
+  g.closePath();
+  g.fill();
+}
+
+/* 中央そろえのピル型ラベル */
+function pill(g, cx, y, text, h, bg, color, size, weight, family) {
+  g.font = `${weight} ${size}px "${family}", sans-serif`;
+  const w = g.measureText(text).width + 44;
+  round(g, cx - w / 2, y - h / 2, w, h + 12, (h + 12) / 2, bg);
+  g.fillStyle = color;
+  g.textAlign = "center";
+  g.fillText(text, cx, y + 11);
 }
 
 document.getElementById("btn-save").addEventListener("click", async () => {
