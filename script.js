@@ -179,6 +179,8 @@ function renderPage() {
     const card = document.createElement("div");
     card.className = "q-card";
     card.dataset.index = i;
+    // ページ内での順番だけずらす。1枚ずつ少し遅れて現れるように
+    card.style.setProperty("--cd", ((i - start) * 0.09).toFixed(2) + "s");
 
     const strength = ["とてもAに近い", "Aに近い", "やや A", "やや B", "Bに近い", "とてもBに近い"];
     const dots = [0, 1, 2, 3, 4, 5].map((v) => {
@@ -216,9 +218,20 @@ $("#quiz-page").addEventListener("click", (e) => {
   const idx = Number(card.dataset.index);
   answers[idx] = Number(dot.dataset.v);
 
-  card.querySelectorAll(".dot").forEach((d) => d.classList.remove("selected"));
+  card.querySelectorAll(".dot").forEach((d) => {
+    d.classList.remove("selected");
+    d.querySelector(".dot-ripple")?.remove();
+  });
   dot.classList.add("selected");
   card.classList.remove("needs-answer");
+
+  // 選んだ瞬間、色つきの波紋をふわっと広げて消す
+  const ripple = document.createElement("span");
+  ripple.className = "dot-ripple";
+  ripple.style.color = Number(dot.dataset.v) <= 2 ? "var(--pine)" : "var(--fjord)";
+  dot.appendChild(ripple);
+  ripple.addEventListener("animationend", () => ripple.remove());
+
   updateProgress();
   scrollToNext(idx);
 });
@@ -272,14 +285,29 @@ function updateProgress() {
         const p = route.getPointAtLength(routeLength * ratio);
         marker.setAttribute("cx", p.x);
         marker.setAttribute("cy", p.y);
+        // 1問答えるごとに、マーカーをぴょんと跳ねさせる
+        marker.classList.remove("hop");
+        void marker.offsetWidth;
+        marker.classList.add("hop");
       } catch (e) {}
     }
   }
 
+  const wasPeakPassed = document.getElementById("sign-peak").classList.contains("passed");
   document.getElementById("sign-mid").classList.toggle("passed", ratio >= 0.5);
   document.getElementById("sign-peak").classList.toggle("passed", done === QUIZ.length);
   $("#progress-count").textContent = done;
   $("#progress-bar-wrap").setAttribute("aria-valuenow", done);
+
+  // 最後の質問に答えた瞬間だけ、山頂にキラキラを出す
+  if (!wasPeakPassed && done === QUIZ.length) {
+    const spark = document.getElementById("summit-spark");
+    if (spark) {
+      spark.classList.remove("show");
+      void spark.getBBox();
+      spark.classList.add("show");
+    }
+  }
 }
 
 /* ---------- ページ移動 ---------- */
