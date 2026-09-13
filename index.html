@@ -46,23 +46,25 @@
   <!-- ========== スタート画面 ========== -->
   <section id="screen-start" class="screen is-active">
     <div class="hero">
-      <div class="cast" id="cast-top"><!-- 孤峰・稜線 --></div>
+      <div class="cluster-wrap" id="cluster-wrap"><!-- 16タイプが山に集合したイラスト --></div>
+      <p class="hook">その山、待ってるよ。</p>
       <h1 class="hero-title">登山タイプ診断</h1>
-      <p class="hero-en"><b>16</b> TYPES OF HIKERS</p>
-      <p class="hero-ver">Ver.0.82 Tsukuba / 2026.09.13</p>
+      <p class="hero-en-row">
+        <span class="hero-en"><b>16</b> TYPES OF HIKERS</span>
+        <span class="ver-badge">Ver.筑波山</span>
+      </p>
       <p class="hero-lead">
         <span id="lead-count">14</span>の質問に、AとBで近いほうを選ぶだけ。<br>
         あなたの登山スタイルを<strong>16タイプ</strong>に分類。<br>
         <strong>目的 × 仲間 × 計画 × リスク</strong><br>
         4つの軸から、あなたらしい山との付き合い方が見えてきます！
       </p>
-      <button class="btn btn-primary" id="btn-start">診断をはじめる</button>
-      <p class="hero-note">所要時間 約2分・全<span id="note-count">14</span>問</p>
+      <button class="btn btn-primary" id="btn-start">診断をはじめる（約2分）</button>
+      <p class="hero-note">全<span id="note-count">14</span>問・SNSでシェアできます</p>
       <p class="hero-link">
         <a href="about.html">診断の仕組み</a>
         <a href="types.html?g=PS">16タイプの詳細</a>
       </p>
-      <div class="cast" id="cast-bottom"><!-- 静林・陽だまり --></div>
     </div>
       <footer class="site-foot">
       <a href="https://x.com/yamastateofmind" target="_blank" rel="noopener">
@@ -77,7 +79,34 @@
     <header class="quiz-header">
       <div class="climb" id="progress-bar-wrap" role="progressbar"
            aria-label="登頂までの進み具合" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0">
-        <svg class="climb-svg" viewBox="0 0 340 52">
+        <svg class="climb-svg" viewBox="0 -16 340 68">
+          <!-- 遊び心：Midpointの手前は木、その先は岩をちらす（背景の飾り・進捗には無関係） -->
+          <g class="deco-tree" transform="translate(40 50)">
+            <path d="M0 -8 L4 -1 L1.5 -1 L5 5 L-5 5 L-1.5 -1 L-4 -1 Z"/>
+            <rect x="-1" y="5" width="2" height="3"/>
+          </g>
+          <g class="deco-tree" transform="translate(75 46.7) scale(.85)">
+            <path d="M0 -8 L4 -1 L1.5 -1 L5 5 L-5 5 L-1.5 -1 L-4 -1 Z"/>
+            <rect x="-1" y="5" width="2" height="3"/>
+          </g>
+          <g class="deco-tree" transform="translate(110 43) scale(1.05)">
+            <path d="M0 -8 L4 -1 L1.5 -1 L5 5 L-5 5 L-1.5 -1 L-4 -1 Z"/>
+            <rect x="-1" y="5" width="2" height="3"/>
+          </g>
+          <g class="deco-tree" transform="translate(140 40) scale(.9)">
+            <path d="M0 -8 L4 -1 L1.5 -1 L5 5 L-5 5 L-1.5 -1 L-4 -1 Z"/>
+            <rect x="-1" y="5" width="2" height="3"/>
+          </g>
+          <g class="deco-rock" transform="translate(215 35.5)">
+            <path d="M-5 3 L-3 -2 L1 -3 L5 0 L4 3 L-2 4 Z"/>
+          </g>
+          <g class="deco-rock" transform="translate(250 31) scale(1.15)">
+            <path d="M-5 3 L-3 -2 L1 -3 L5 0 L4 3 L-2 4 Z"/>
+          </g>
+          <g class="deco-rock" transform="translate(285 26.3) scale(.9)">
+            <path d="M-5 3 L-3 -2 L1 -3 L5 0 L4 3 L-2 4 Z"/>
+          </g>
+
           <!-- 登山道（未踏） -->
           <path id="climb-path" class="climb-route"
                 d="M14 46 L150 32 L190 33 L317 16"/>
@@ -101,16 +130,23 @@
             <circle class="node" cx="170" cy="32.6" r="4.2"/>
           </g>
 
-          <!-- 山頂の看板 -->
+          <!-- 山頂の旗 -->
           <g id="sign-peak" class="sign">
-            <path class="pole" d="M317 16 L317 9"/>
-            <rect class="board" x="296" y="-1" width="38" height="10" rx="3"/>
-            <text class="board-text" x="315" y="6.3">Summit!</text>
+            <path class="pole" d="M317 16 L317 -4"/>
+            <path class="flag" d="M317 -4 L334 0 L317 4 Z"/>
+            <text class="flag-text" x="317" y="-7">Summit!</text>
             <circle class="node" cx="317" cy="16" r="4.6"/>
           </g>
 
           <!-- 現在地 -->
           <circle id="climb-marker" class="climb-marker" cx="14" cy="46" r="5"/>
+
+          <!-- 山頂のキラキラ（最後の質問に答えた瞬間だけ出す） -->
+          <g id="summit-spark" class="summit-spark" transform="translate(317 0)">
+            <path transform="translate(-16,-14) rotate(0)"  d="M0 -6 L1.6 -1.6 L6 0 L1.6 1.6 L0 6 L-1.6 1.6 L-6 0 L-1.6 -1.6 Z"/>
+            <path transform="translate(12,-16) rotate(30)" d="M0 -5 L1.3 -1.3 L5 0 L1.3 1.3 L0 5 L-1.3 1.3 L-5 0 L-1.3 -1.3 Z"/>
+            <path transform="translate(-4,-20) rotate(60)" d="M0 -4.5 L1.2 -1.2 L4.5 0 L1.2 1.2 L0 4.5 L-1.2 1.2 L-4.5 0 L-1.2 -1.2 Z"/>
+          </g>
 
           <!-- 残り問数 -->
           <text class="climb-count" x="337" y="48"><tspan id="progress-count">0</tspan> / <tspan id="progress-total">14</tspan></text>
@@ -176,8 +212,8 @@
         <button class="share-cta" id="btn-cta" type="button" aria-label="結果をシェア">
           <span class="share-cta-char" id="cta-char"><!-- キャラクター --></span>
           <span class="share-cta-txt">
-            <span class="share-cta-main">結果をシェアする</span>
-            <span class="share-cta-sub">SHARE YOUR TYPE!!</span>
+            <span class="share-cta-main">結果をシェア</span>
+            <span class="share-cta-sub">SHARE YOUR TYPE!</span>
           </span>
         </button>
       </div>
@@ -222,7 +258,7 @@
     <div class="smodal-acts">
       <button class="sm-act sm-dl" id="sm-dl" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M6.5 11.5 12 17l5.5-5.5"/><path d="M4.5 20h15"/></svg>
-        <span>画像をダウンロード</span>
+        <span>画像を表示</span>
       </button>
       <a class="sm-act sm-x" id="sm-x" href="#" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2h3.1l-6.8 7.8L23.2 22h-6.3l-4.9-6.4L6.4 22H3.2l7.3-8.3L1.6 2H8l4.4 5.9L18.9 2zm-1.1 18h1.7L7.1 3.9H5.3L17.8 20z"/></svg>

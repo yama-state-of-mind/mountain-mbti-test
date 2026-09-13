@@ -71,34 +71,97 @@ function showScreen(name) {
   });
 })();
 
-function renderCast() {
-  if (typeof characterSVG !== "function") return;
-  const codes = Object.keys(TYPES);
+/* =========================================================
+   スタート画面：16タイプが山に集合したビジュアル
+   山の両斜面に沿って配置し、麓（手前）ほど大きく・外側へ張り出す。
+   山頂の2体はすでに登頂して喜んでいる構図にしている。
+   ========================================================= */
+/* =========================================================
+   スタート画面：12タイプが山の面に散らばったビジュアル
+   輪郭の2本線ではなく、山の▲の面を4段に分けて幅いっぱいへ配置する。
+   いちばん上の段だけ1体で、他の段とまったく同じ仕組みで置く
+   （以前は山頂の2体だけ特別扱いにしていたが、不自然だったのでやめた）。
+   表示のたびにシャッフルするので、毎回ちがう12体・少しちがう並びになる。
+   ========================================================= */
+function renderCluster() {
+  const box = document.getElementById("cluster-wrap");
+  if (!box || typeof characterSVG !== "function") return;
 
-  let base = 0;
-  const fill = (id, keys) => {
-    const box = document.getElementById(id);
-    if (!box) return;
-    box.innerHTML = keys.map((key, gi) => {
-      const g = GROUPS[key];
-      const list = codes.filter((c) => c.slice(0, 2) === key);
-      return `<div class="cast-group" style="background:${g.band}">
-        ${list.map((c, i) => {
-          // 帯ごと・1体ごとに少しずつ遅らせて、順番に現れるようにする
-          const n = base + gi * 4 + i;
-          const delay = n * 0.055;              // 順番に現れるための遅れ
-          const cycle = 4.6 + (n % 5) * 0.36;   // 1体ずつ周期を変えて動きを揃えない
-          return characterSVG(c, "char").replace(
-            "<svg ", `<svg style="--d:${delay.toFixed(2)}s;--fd:${cycle.toFixed(2)}s" `);
-        }).join("")}
-      </div>`;
-    }).join("");
-  };
-  fill("cast-top", ["PS", "PG"]);
-  base = 8;
-  fill("cast-bottom", ["ES", "EG"]);
+  const VB_W = 480, VB_H = 320;
+  const APEX = { x: 240, y: 34 };
+  const BASE_L = { x: 70, y: 288 };
+  const BASE_R = { x: 410, y: 288 };
+
+  const leftX = (t) => APEX.x + t * (BASE_L.x - APEX.x);
+  const rightX = (t) => APEX.x + t * (BASE_R.x - APEX.x);
+  const rowY = (t) => APEX.y + t * (BASE_L.y - APEX.y);
+
+  // 段ごとの高さ(t)と、その段に置く数。サイズは麓に近いほど大きく育つ
+  const ROWS = [[0.22, 1], [0.42, 3], [0.62, 4], [0.82, 4]];
+  const sizeAt = (t) => 36 + 28 * t;
+
+  const shuffled = Object.keys(TYPES);
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  const codes = shuffled.slice(0, 12);
+
+  const items = [];
+  let idx = 0;
+  ROWS.forEach(([t, count]) => {
+    const lx = leftX(t), rx = rightX(t);
+    const inset = (rx - lx) * 0.10;
+    const lx2 = lx + inset, rx2 = rx - inset;
+    for (let i = 0; i < count; i++) {
+      const code = codes[idx++];
+      const s = (i + 0.5) / count;
+      const x = lx2 + s * (rx2 - lx2);
+      const y = rowY(t) + (i % 2 === 0 ? -1 : 1) * (6 + 8 * t);
+      const size = sizeAt(t);
+      const rot = (x < APEX.x ? -1 : 1) * (6 + 10 * t) + ((i % 3) - 1) * 3;
+      items.push({ code, x, y, size, rot, z: Math.round(t * 100) });
+    }
+  });
+  items.sort((a, b) => a.z - b.z);
+
+  const mountain = `
+    <path d="M${BASE_L.x - 60} ${BASE_L.y + 18} L${BASE_L.x - 6} ${BASE_L.y - 52} L${BASE_L.x + 58} ${BASE_L.y - 4}
+             L${APEX.x - 36} ${APEX.y + 90} L${APEX.x + 30} ${APEX.y + 168} L${APEX.x + 100} ${APEX.y + 128}
+             L${BASE_R.x + 8} ${BASE_R.y - 26} L${BASE_R.x + 8} ${VB_H} L${BASE_L.x - 60} ${VB_H} Z"
+          fill="var(--pine)" opacity=".12"/>
+    <path d="M${APEX.x} ${APEX.y} L${BASE_R.x} ${BASE_R.y} L${BASE_L.x} ${BASE_L.y} Z"
+          fill="var(--pine)" opacity=".9"/>
+    <path d="M${APEX.x} ${APEX.y} L${APEX.x + 28} ${APEX.y + 38} L${APEX.x - 3} ${APEX.y + 28}
+             L${APEX.x - 28} ${APEX.y + 38} Z" fill="var(--sun)" opacity=".92"/>
+    <circle cx="${APEX.x}" cy="${APEX.y + 4}" r="72" fill="var(--sun)" opacity=".08"/>`;
+
+  const sparkles = [[-100,10],[130,6],[-160,90],[150,80],[0,-18],[-90,130],[80,120]]
+    .map(([dx, dy], i) => `
+      <path transform="translate(${APEX.x + dx} ${APEX.y + 46 + dy}) rotate(${(i * 37) % 360})"
+            d="M0 -6 L1.6 -1.6 L6 0 L1.6 1.6 L0 6 L-1.6 1.6 L-6 0 L-1.6 -1.6 Z"
+            fill="var(--sun)" opacity=".55"/>`).join("");
+
+  const layer = items.map((it, i) => {
+    const half = it.size / 2;
+    const inner = characterSVG(it.code, "", true).replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
+    const delay = (i * 0.06).toFixed(2);
+    const cycle = (4.0 + (i % 5) * 0.3).toFixed(2);
+    return `
+      <g transform="translate(${it.x - half} ${it.y - half})">
+        <g class="cl-char" style="--fd:${cycle}s;animation-delay:${delay}s,${delay}s">
+          <g transform="rotate(${it.rot} ${half} ${half}) scale(${it.size / 160})">${inner}</g>
+        </g>
+      </g>`;
+  }).join("");
+
+  box.innerHTML = `
+    <svg viewBox="0 0 ${VB_W} ${VB_H}" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="12タイプが山に散らばったイラスト">
+      ${mountain}${sparkles}${layer}
+    </svg>`;
 }
-renderCast();
+renderCluster();
 
 /* ---------- 質問ページの描画 ---------- */
 function renderPage() {
@@ -116,6 +179,8 @@ function renderPage() {
     const card = document.createElement("div");
     card.className = "q-card";
     card.dataset.index = i;
+    // ページ内での順番だけずらす。1枚ずつ少し遅れて現れるように
+    card.style.setProperty("--cd", ((i - start) * 0.09).toFixed(2) + "s");
 
     const strength = ["とてもAに近い", "Aに近い", "やや A", "やや B", "Bに近い", "とてもBに近い"];
     const dots = [0, 1, 2, 3, 4, 5].map((v) => {
@@ -153,9 +218,20 @@ $("#quiz-page").addEventListener("click", (e) => {
   const idx = Number(card.dataset.index);
   answers[idx] = Number(dot.dataset.v);
 
-  card.querySelectorAll(".dot").forEach((d) => d.classList.remove("selected"));
+  card.querySelectorAll(".dot").forEach((d) => {
+    d.classList.remove("selected");
+    d.querySelector(".dot-ripple")?.remove();
+  });
   dot.classList.add("selected");
   card.classList.remove("needs-answer");
+
+  // 選んだ瞬間、色つきの波紋をふわっと広げて消す
+  const ripple = document.createElement("span");
+  ripple.className = "dot-ripple";
+  ripple.style.color = Number(dot.dataset.v) <= 2 ? "var(--pine)" : "var(--fjord)";
+  dot.appendChild(ripple);
+  ripple.addEventListener("animationend", () => ripple.remove());
+
   updateProgress();
   scrollToNext(idx);
 });
@@ -209,14 +285,29 @@ function updateProgress() {
         const p = route.getPointAtLength(routeLength * ratio);
         marker.setAttribute("cx", p.x);
         marker.setAttribute("cy", p.y);
+        // 1問答えるごとに、マーカーをぴょんと跳ねさせる
+        marker.classList.remove("hop");
+        void marker.offsetWidth;
+        marker.classList.add("hop");
       } catch (e) {}
     }
   }
 
+  const wasPeakPassed = document.getElementById("sign-peak").classList.contains("passed");
   document.getElementById("sign-mid").classList.toggle("passed", ratio >= 0.5);
   document.getElementById("sign-peak").classList.toggle("passed", done === QUIZ.length);
   $("#progress-count").textContent = done;
   $("#progress-bar-wrap").setAttribute("aria-valuenow", done);
+
+  // 最後の質問に答えた瞬間だけ、山頂にキラキラを出す
+  if (!wasPeakPassed && done === QUIZ.length) {
+    const spark = document.getElementById("summit-spark");
+    if (spark) {
+      spark.classList.remove("show");
+      void spark.getBBox();
+      spark.classList.add("show");
+    }
+  }
 }
 
 /* ---------- ページ移動 ---------- */
@@ -803,7 +894,7 @@ if (smCopy) smCopy.addEventListener("click", async () => {
   track("share_click", { channel: "copy", placement: "modal" });
 });
 
-/* 画像をダウンロード */
+/* 画像を用意する（ダウンロード・Instagram共通） */
 let shareBusy = false;   // 生成中の連打よけ
 async function saveShareImage() {
   if (!shareData || shareBusy) return false;
@@ -822,10 +913,39 @@ async function saveShareImage() {
   }
 }
 
+/* 画像を表示：別タブでPNGをそのまま開く（iPhoneはダウンロードよりキャプチャの方が速いため）
+   ポップアップブロック対策として、タブ自体はクリックした瞬間（awaitの前）に開いておき、
+   画像ができてからそこにURLを差し込む */
+async function showShareImage() {
+  if (!shareData || shareBusy) return false;
+  const win = window.open("", "_blank");
+  shareBusy = true;
+  toast("画像を作成しています…");
+  try {
+    const blob = await getSharePNG(shareData);
+    const url = URL.createObjectURL(blob);
+    if (win) {
+      win.location.href = url;
+    } else {
+      // ポップアップがブロックされた場合はダウンロードにフォールバック
+      const name = `yamatype_${shareData.code}${shareData.secret ? "_secret" : ""}.png`;
+      downloadBlob(blob, name);
+      toast("ポップアップがブロックされたため保存しました");
+    }
+    return true;
+  } catch (e) {
+    if (win) win.close();
+    toast("画像を作成できませんでした");
+    return false;
+  } finally {
+    shareBusy = false;
+  }
+}
+
 const smDl = document.getElementById("sm-dl");
 if (smDl) smDl.addEventListener("click", async () => {
-  if (await saveShareImage()) toast("画像を保存しました");
-  track("share_click", { channel: "download", placement: "modal" });
+  await showShareImage();
+  track("share_click", { channel: "view_image", placement: "modal" });
 });
 
 /* Instagram：直接投稿はできないので、画像を保存してからアプリを開く */
