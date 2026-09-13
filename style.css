@@ -1418,6 +1418,7 @@ body {
 
 .panel-body { text-align: left; }
 .axes { text-align: left; }
+.axes-title-wrap { text-align: center; }
 
 /* =========================================================
    結果画面：順番に現れる演出
