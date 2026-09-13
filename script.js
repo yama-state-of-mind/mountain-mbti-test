@@ -76,66 +76,77 @@ function showScreen(name) {
    山の両斜面に沿って配置し、麓（手前）ほど大きく・外側へ張り出す。
    山頂の2体はすでに登頂して喜んでいる構図にしている。
    ========================================================= */
+/* =========================================================
+   スタート画面：12タイプが山の面に散らばったビジュアル
+   輪郭の2本線ではなく、山の▲の面を4段に分けて幅いっぱいへ配置する。
+   いちばん上の段だけ1体で、他の段とまったく同じ仕組みで置く
+   （以前は山頂の2体だけ特別扱いにしていたが、不自然だったのでやめた）。
+   表示のたびにシャッフルするので、毎回ちがう12体・少しちがう並びになる。
+   ========================================================= */
 function renderCluster() {
   const box = document.getElementById("cluster-wrap");
   if (!box || typeof characterSVG !== "function") return;
 
-  // 生息エリアが隣り合わせで並ぶよう、4エリアを順に取り出す
-  const codes = Object.keys(TYPES);
-  const byGroup = { PS: [], PG: [], ES: [], EG: [] };
-  codes.forEach((c) => byGroup[c.slice(0, 2)].push(c));
-  const order = [];
-  for (let i = 0; i < 4; i++) {
-    ["PS", "PG", "ES", "EG"].forEach((k) => { if (byGroup[k][i]) order.push(byGroup[k][i]); });
+  const VB_W = 480, VB_H = 320;
+  const APEX = { x: 240, y: 34 };
+  const BASE_L = { x: 70, y: 288 };
+  const BASE_R = { x: 410, y: 288 };
+
+  const leftX = (t) => APEX.x + t * (BASE_L.x - APEX.x);
+  const rightX = (t) => APEX.x + t * (BASE_R.x - APEX.x);
+  const rowY = (t) => APEX.y + t * (BASE_L.y - APEX.y);
+
+  // 段ごとの高さ(t)と、その段に置く数。サイズは麓に近いほど大きく育つ
+  const ROWS = [[0.22, 1], [0.42, 3], [0.62, 4], [0.82, 4]];
+  const sizeAt = (t) => 36 + 28 * t;
+
+  const shuffled = Object.keys(TYPES);
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
-  const peak = order.slice(0, 2);    // 山頂で喜ぶ2体
-  const left = order.slice(2, 9);    // 左斜面7体
-  const right = order.slice(9, 16);  // 右斜面7体
+  const codes = shuffled.slice(0, 12);
 
-  const VB_W = 380, VB_H = 336;
-  const APEX = { x: 190, y: 40 };
-  const BASE_L = { x: 8, y: 306 };
-  const BASE_R = { x: 372, y: 306 };
-
-  const slopePoint = (base, t) => ({
-    x: APEX.x + t * (base.x - APEX.x),
-    y: APEX.y + t * (base.y - APEX.y),
+  const items = [];
+  let idx = 0;
+  ROWS.forEach(([t, count]) => {
+    const lx = leftX(t), rx = rightX(t);
+    const inset = (rx - lx) * 0.10;
+    const lx2 = lx + inset, rx2 = rx - inset;
+    for (let i = 0; i < count; i++) {
+      const code = codes[idx++];
+      const s = (i + 0.5) / count;
+      const x = lx2 + s * (rx2 - lx2);
+      const y = rowY(t) + (i % 2 === 0 ? -1 : 1) * (6 + 8 * t);
+      const size = sizeAt(t);
+      const rot = (x < APEX.x ? -1 : 1) * (6 + 10 * t) + ((i % 3) - 1) * 3;
+      items.push({ code, x, y, size, rot, z: Math.round(t * 100) });
+    }
   });
-
-  const placeSlope = (list, base, side) => list.map((code, i) => {
-    const t = 0.16 + (i / (list.length - 1)) * 0.76;
-    const p = slopePoint(base, t);
-    const outward = (14 + t * 46) * side;
-    const jitter = (i % 2 === 0 ? -1 : 1) * (6 + t * 6);
-    return { code, x: p.x + outward, y: p.y + jitter, size: 42 + t * 46, rot: side * (6 + t * 8), z: Math.round(t * 100) };
-  });
-  const placePeak = (list) => list.map((code, i) => ({
-    code, x: APEX.x + (i === 0 ? -26 : 26), y: APEX.y + 6, size: 40, rot: i === 0 ? -8 : 8, z: 999,
-  }));
-
-  const items = [...placeSlope(left, BASE_L, -1), ...placeSlope(right, BASE_R, 1), ...placePeak(peak)]
-    .sort((a, b) => a.z - b.z);
+  items.sort((a, b) => a.z - b.z);
 
   const mountain = `
-    <path d="M0 306 L60 236 L130 292 L204 176 L270 260 L340 216 L380 262 L380 336 L0 336 Z"
+    <path d="M${BASE_L.x - 60} ${BASE_L.y + 18} L${BASE_L.x - 6} ${BASE_L.y - 52} L${BASE_L.x + 58} ${BASE_L.y - 4}
+             L${APEX.x - 36} ${APEX.y + 90} L${APEX.x + 30} ${APEX.y + 168} L${APEX.x + 100} ${APEX.y + 128}
+             L${BASE_R.x + 8} ${BASE_R.y - 26} L${BASE_R.x + 8} ${VB_H} L${BASE_L.x - 60} ${VB_H} Z"
           fill="var(--pine)" opacity=".12"/>
     <path d="M${APEX.x} ${APEX.y} L${BASE_R.x} ${BASE_R.y} L${BASE_L.x} ${BASE_L.y} Z"
           fill="var(--pine)" opacity=".9"/>
-    <path d="M${APEX.x} ${APEX.y} L${APEX.x + 34} ${APEX.y + 46} L${APEX.x - 4} ${APEX.y + 34}
-             L${APEX.x - 34} ${APEX.y + 46} Z" fill="var(--sun)" opacity=".92"/>
-    <circle cx="${APEX.x}" cy="${APEX.y + 4}" r="86" fill="var(--sun)" opacity=".08"/>`;
+    <path d="M${APEX.x} ${APEX.y} L${APEX.x + 28} ${APEX.y + 38} L${APEX.x - 3} ${APEX.y + 28}
+             L${APEX.x - 28} ${APEX.y + 38} Z" fill="var(--sun)" opacity=".92"/>
+    <circle cx="${APEX.x}" cy="${APEX.y + 4}" r="72" fill="var(--sun)" opacity=".08"/>`;
 
-  const sparkles = [[70,60],[318,52],[46,150],[338,140],[190,18],[104,208],[280,200]]
-    .map(([x, y], i) => `
-      <path transform="translate(${x} ${y}) rotate(${(i * 37) % 360})"
+  const sparkles = [[-100,10],[130,6],[-160,90],[150,80],[0,-18],[-90,130],[80,120]]
+    .map(([dx, dy], i) => `
+      <path transform="translate(${APEX.x + dx} ${APEX.y + 46 + dy}) rotate(${(i * 37) % 360})"
             d="M0 -6 L1.6 -1.6 L6 0 L1.6 1.6 L0 6 L-1.6 1.6 L-6 0 L-1.6 -1.6 Z"
             fill="var(--sun)" opacity=".55"/>`).join("");
 
   const layer = items.map((it, i) => {
     const half = it.size / 2;
     const inner = characterSVG(it.code, "", true).replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
-    const delay = (i * 0.07).toFixed(2);
-    const cycle = (4.0 + (i % 5) * 0.34).toFixed(2);
+    const delay = (i * 0.06).toFixed(2);
+    const cycle = (4.0 + (i % 5) * 0.3).toFixed(2);
     return `
       <g transform="translate(${it.x - half} ${it.y - half})">
         <g class="cl-char" style="--fd:${cycle}s;animation-delay:${delay}s,${delay}s">
@@ -146,7 +157,7 @@ function renderCluster() {
 
   box.innerHTML = `
     <svg viewBox="0 0 ${VB_W} ${VB_H}" xmlns="http://www.w3.org/2000/svg" role="img"
-         aria-label="16タイプが山に集合したイラスト">
+         aria-label="12タイプが山に散らばったイラスト">
       ${mountain}${sparkles}${layer}
     </svg>`;
 }
