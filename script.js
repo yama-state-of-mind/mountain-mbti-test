@@ -71,34 +71,85 @@ function showScreen(name) {
   });
 })();
 
-function renderCast() {
-  if (typeof characterSVG !== "function") return;
-  const codes = Object.keys(TYPES);
+/* =========================================================
+   スタート画面：16タイプが山に集合したビジュアル
+   山の両斜面に沿って配置し、麓（手前）ほど大きく・外側へ張り出す。
+   山頂の2体はすでに登頂して喜んでいる構図にしている。
+   ========================================================= */
+function renderCluster() {
+  const box = document.getElementById("cluster-wrap");
+  if (!box || typeof characterSVG !== "function") return;
 
-  let base = 0;
-  const fill = (id, keys) => {
-    const box = document.getElementById(id);
-    if (!box) return;
-    box.innerHTML = keys.map((key, gi) => {
-      const g = GROUPS[key];
-      const list = codes.filter((c) => c.slice(0, 2) === key);
-      return `<div class="cast-group" style="background:${g.band}">
-        ${list.map((c, i) => {
-          // 帯ごと・1体ごとに少しずつ遅らせて、順番に現れるようにする
-          const n = base + gi * 4 + i;
-          const delay = n * 0.055;              // 順番に現れるための遅れ
-          const cycle = 4.6 + (n % 5) * 0.36;   // 1体ずつ周期を変えて動きを揃えない
-          return characterSVG(c, "char").replace(
-            "<svg ", `<svg style="--d:${delay.toFixed(2)}s;--fd:${cycle.toFixed(2)}s" `);
-        }).join("")}
-      </div>`;
-    }).join("");
-  };
-  fill("cast-top", ["PS", "PG"]);
-  base = 8;
-  fill("cast-bottom", ["ES", "EG"]);
+  // 生息エリアが隣り合わせで並ぶよう、4エリアを順に取り出す
+  const codes = Object.keys(TYPES);
+  const byGroup = { PS: [], PG: [], ES: [], EG: [] };
+  codes.forEach((c) => byGroup[c.slice(0, 2)].push(c));
+  const order = [];
+  for (let i = 0; i < 4; i++) {
+    ["PS", "PG", "ES", "EG"].forEach((k) => { if (byGroup[k][i]) order.push(byGroup[k][i]); });
+  }
+  const peak = order.slice(0, 2);    // 山頂で喜ぶ2体
+  const left = order.slice(2, 9);    // 左斜面7体
+  const right = order.slice(9, 16);  // 右斜面7体
+
+  const VB_W = 380, VB_H = 336;
+  const APEX = { x: 190, y: 40 };
+  const BASE_L = { x: 8, y: 306 };
+  const BASE_R = { x: 372, y: 306 };
+
+  const slopePoint = (base, t) => ({
+    x: APEX.x + t * (base.x - APEX.x),
+    y: APEX.y + t * (base.y - APEX.y),
+  });
+
+  const placeSlope = (list, base, side) => list.map((code, i) => {
+    const t = 0.16 + (i / (list.length - 1)) * 0.76;
+    const p = slopePoint(base, t);
+    const outward = (14 + t * 46) * side;
+    const jitter = (i % 2 === 0 ? -1 : 1) * (6 + t * 6);
+    return { code, x: p.x + outward, y: p.y + jitter, size: 42 + t * 46, rot: side * (6 + t * 8), z: Math.round(t * 100) };
+  });
+  const placePeak = (list) => list.map((code, i) => ({
+    code, x: APEX.x + (i === 0 ? -26 : 26), y: APEX.y + 6, size: 40, rot: i === 0 ? -8 : 8, z: 999,
+  }));
+
+  const items = [...placeSlope(left, BASE_L, -1), ...placeSlope(right, BASE_R, 1), ...placePeak(peak)]
+    .sort((a, b) => a.z - b.z);
+
+  const mountain = `
+    <path d="M0 306 L60 236 L130 292 L204 176 L270 260 L340 216 L380 262 L380 336 L0 336 Z"
+          fill="var(--pine)" opacity=".12"/>
+    <path d="M${APEX.x} ${APEX.y} L${BASE_R.x} ${BASE_R.y} L${BASE_L.x} ${BASE_L.y} Z"
+          fill="var(--pine)" opacity=".9"/>
+    <path d="M${APEX.x} ${APEX.y} L${APEX.x + 34} ${APEX.y + 46} L${APEX.x - 4} ${APEX.y + 34}
+             L${APEX.x - 34} ${APEX.y + 46} Z" fill="var(--sun)" opacity=".92"/>
+    <circle cx="${APEX.x}" cy="${APEX.y + 4}" r="86" fill="var(--sun)" opacity=".08"/>`;
+
+  const sparkles = [[70,60],[318,52],[46,150],[338,140],[190,18],[104,208],[280,200]]
+    .map(([x, y], i) => `
+      <path transform="translate(${x} ${y}) rotate(${(i * 37) % 360})"
+            d="M0 -6 L1.6 -1.6 L6 0 L1.6 1.6 L0 6 L-1.6 1.6 L-6 0 L-1.6 -1.6 Z"
+            fill="var(--sun)" opacity=".55"/>`).join("");
+
+  const layer = items.map((it, i) => {
+    const half = it.size / 2;
+    const inner = characterSVG(it.code, "", true).replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
+    const delay = (i * 0.07).toFixed(2);
+    const cycle = (4.0 + (i % 5) * 0.34).toFixed(2);
+    return `
+      <g class="cl-char" style="--r:${it.rot}deg;--fd:${cycle}s;animation-delay:${delay}s,${delay}s"
+         transform="translate(${it.x - half} ${it.y - half})">
+        <g transform="rotate(${it.rot} ${half} ${half}) scale(${it.size / 160})">${inner}</g>
+      </g>`;
+  }).join("");
+
+  box.innerHTML = `
+    <svg viewBox="0 0 ${VB_W} ${VB_H}" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="16タイプが山に集合したイラスト">
+      ${mountain}${sparkles}${layer}
+    </svg>`;
 }
-renderCast();
+renderCluster();
 
 /* ---------- 質問ページの描画 ---------- */
 function renderPage() {
@@ -803,7 +854,7 @@ if (smCopy) smCopy.addEventListener("click", async () => {
   track("share_click", { channel: "copy", placement: "modal" });
 });
 
-/* 画像をダウンロード */
+/* 画像を用意する（ダウンロード・Instagram共通） */
 let shareBusy = false;   // 生成中の連打よけ
 async function saveShareImage() {
   if (!shareData || shareBusy) return false;
@@ -822,10 +873,39 @@ async function saveShareImage() {
   }
 }
 
+/* 画像を表示：別タブでPNGをそのまま開く（iPhoneはダウンロードよりキャプチャの方が速いため）
+   ポップアップブロック対策として、タブ自体はクリックした瞬間（awaitの前）に開いておき、
+   画像ができてからそこにURLを差し込む */
+async function showShareImage() {
+  if (!shareData || shareBusy) return false;
+  const win = window.open("", "_blank");
+  shareBusy = true;
+  toast("画像を作成しています…");
+  try {
+    const blob = await getSharePNG(shareData);
+    const url = URL.createObjectURL(blob);
+    if (win) {
+      win.location.href = url;
+    } else {
+      // ポップアップがブロックされた場合はダウンロードにフォールバック
+      const name = `yamatype_${shareData.code}${shareData.secret ? "_secret" : ""}.png`;
+      downloadBlob(blob, name);
+      toast("ポップアップがブロックされたため保存しました");
+    }
+    return true;
+  } catch (e) {
+    if (win) win.close();
+    toast("画像を作成できませんでした");
+    return false;
+  } finally {
+    shareBusy = false;
+  }
+}
+
 const smDl = document.getElementById("sm-dl");
 if (smDl) smDl.addEventListener("click", async () => {
-  if (await saveShareImage()) toast("画像を保存しました");
-  track("share_click", { channel: "download", placement: "modal" });
+  await showShareImage();
+  track("share_click", { channel: "view_image", placement: "modal" });
 });
 
 /* Instagram：直接投稿はできないので、画像を保存してからアプリを開く */

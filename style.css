@@ -107,7 +107,7 @@ body {
   letter-spacing: .24em;
   color: var(--fjord);
   line-height: 1.15;
-  margin-top: 0;
+  margin-top: -2px;   /* タイトルの副題として詰めて寄り添わせる */
   margin-bottom: 0;
 }
 .hero-en b,
@@ -123,16 +123,7 @@ body {
   font-size: 34px;
   font-weight: 900;
   letter-spacing: .04em;
-  margin-bottom: 6px;
-}
-.hero-ver {
-  font-family: "Outfit", var(--font);
-  font-size: 9px;
-  font-weight: 400;
-  letter-spacing: .1em;
-  color: #B9C6BF;
-  line-height: 1.2;
-  margin: 4px 0 18px;
+  margin-bottom: 0;
 }
 .hero-title .beta {
   display: inline-block;
@@ -780,46 +771,57 @@ body {
 .hero-link a:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
 
 /* =========================================================
-   スタート画面のキャラクター配置
+   スタート画面：16タイプが山に集合したビジュアル
+   両斜面と山頂に16体を配置し、麓ほど大きく見えるようにしている
    ========================================================= */
-.cast {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
-#cast-top { margin-bottom: 30px; }
-#cast-bottom { margin-top: 30px; }
-.cast-group {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 6px 2px;
-  border-radius: 18px;
-  padding: 12px 8px;
-}
-.cast .char {
-  width: 100%;
-  max-width: 74px;
-  margin: 0 auto;
-  /* 開いたときに順番に現れ、そのあとゆっくり上下に揺れる */
+.cluster-wrap { margin: 0 -4px 2px; }
+.cluster-wrap svg { display: block; width: 100%; height: auto; }
+
+/* キャラクター1体ぶんの浮遊アニメーション */
+.cl-char {
+  transform-origin: center bottom;
   opacity: 0;
   animation:
-    castIn .5s cubic-bezier(.2, .7, .3, 1) forwards,
-    castFloat var(--fd, 5.2s) ease-in-out infinite;
+    clusterIn .5s cubic-bezier(.2, .7, .3, 1) forwards,
+    clusterFloat var(--fd, 4.4s) ease-in-out infinite;
   animation-delay: var(--d, 0s), calc(var(--d, 0s) + .5s);
 }
-
-@keyframes castIn {
-  from { opacity: 0; transform: translateY(10px) scale(.94); }
-  to   { opacity: 1; transform: none; }
+@keyframes clusterIn {
+  from { opacity: 0; transform: translateY(10px) scale(.9) rotate(var(--r, 0deg)); }
+  to   { opacity: 1; transform: none rotate(var(--r, 0deg)); }
 }
-@keyframes castFloat {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-5px); }
+@keyframes clusterFloat {
+  0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
+  50%      { transform: translateY(-4px) rotate(var(--r, 0deg)); }
+}
+
+/* トップの一言。ボタン風にせず、控えめな見出しとして */
+.hook {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: .02em;
+  color: #C98A1F;
+  margin: 4px 0 0;
+}
+
+/* バージョン表示：番号・日付は出さず、山の名前だけをシンプルに。
+   「診断をはじめる」ボタン（丸ピル）と形がかぶらないよう角丸の四角にしている */
+.ver-badge {
+  display: inline-block;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  color: var(--pine);
+  background: #E7EEE9;
+  border: 1.5px solid #CBDBD1;
+  border-radius: 7px;
+  padding: 4px 13px;
+  margin: 9px 0 16px;
 }
 
 /* 動きが苦手な人には出さない */
 @media (prefers-reduced-motion: reduce) {
-  .cast .char { opacity: 1; animation: none; }
+  .cl-char { opacity: 1; animation: none; }
   .result.reveal .result-char { animation: none; }
 }
 
