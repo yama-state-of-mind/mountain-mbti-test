@@ -511,6 +511,181 @@ body {
 }
 
 
+/* ---------- 結果画面：大きなシェアボタン ----------
+   「気をつけたいこと」と4軸バーの間。背景色はJSで生息エリアのdeep色を入れる。
+   パネルより狭い幅にして、ボタンらしさを出す */
+.share-cta-wrap { margin: 18px 0; }
+.share-cta {
+  position: relative;
+  display: flex;
+  border: none;
+  align-items: center;
+  width: 76%;
+  height: 64px;
+  margin: 0 auto;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: var(--font);
+  border-radius: var(--radius-btn);
+  color: #FFFFFF;
+  box-shadow: 0 3px 12px rgba(30, 58, 49, .22);
+  padding: 0 18px 0 0;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.share-cta:active { transform: scale(.98); box-shadow: 0 2px 6px rgba(30, 58, 49, .25); }
+/* キャラクター：72px固定・背景円なし・-9度。64pxのボタンから上下に少しはみ出す */
+.share-cta .char {
+  width: 72px;
+  height: 72px;
+  flex: none;
+  transform: rotate(-9deg);
+  margin: -10px 2px -6px 8px;
+  filter: drop-shadow(0 2px 3px rgba(30, 58, 49, .18));
+}
+.share-cta-txt {
+  flex: 1;
+  text-align: center;
+  line-height: 1.35;
+  padding-right: 48px;  /* キャラクターの分だけ右に寄るのを戻す */
+}
+.share-cta-main {
+  display: block;
+  font-size: 16.5px;
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+.share-cta-sub {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  opacity: .85;
+  letter-spacing: .06em;
+}
+
+
+/* ---------- シェア用モーダル（ボトムシート） ----------
+   .screenのtransform対策で、マークアップは.appの外に置いてある */
+.smodal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.smodal-veil {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 34, 29, .55);
+  opacity: 0;
+  transition: opacity .22s ease;
+}
+.smodal.open .smodal-veil { opacity: 1; }
+.smodal-sheet {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  background: var(--paper);
+  border-radius: 22px 22px 0 0;
+  padding: 14px 18px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 40px rgba(20, 34, 29, .3);
+  transform: translateY(100%);
+  transition: transform .26s ease;
+}
+.smodal.open .smodal-sheet { transform: none; }
+.smodal-grip {
+  width: 40px;
+  height: 4.5px;
+  border-radius: 999px;
+  background: var(--line);
+  margin: 0 auto 10px;
+}
+.smodal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+  background: #EDF2EF;
+  color: var(--stone);
+  font-size: 15px;
+  line-height: 1;
+  font-family: var(--font);
+}
+.smodal-title {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+/* シェア用画像のプレビュー（縦長9:16） */
+.smodal-pv {
+  width: 176px;
+  margin: 0 auto 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 14px rgba(30, 58, 49, .16);
+}
+.smodal-pv svg { display: block; width: 100%; height: auto; }
+/* アクションボタン */
+.smodal-acts { display: grid; gap: 8px; }
+.sm-act {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #fff;
+  border-radius: 999px;
+  padding: 11px 16px;
+  text-decoration: none;
+  transition: transform .12s ease;
+}
+.sm-act:active { transform: scale(.98); }
+.sm-act svg { width: 18px; height: 18px; flex: none; }
+.sm-act span { flex: 1; text-align: center; margin-right: 28px; }
+.sm-dl   { background: var(--pine); }
+.sm-x    { background: #0F1419; }
+.sm-line { background: #06C755; }
+.sm-ig   { background: linear-gradient(45deg, #F58529, #DD2A7B 55%, #8134AF); }
+.sm-copy { background: var(--paper); color: var(--pine); border: 1.6px solid var(--line); }
+.sm-note {
+  font-size: 10.5px;
+  color: var(--stone);
+  text-align: center;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+/* トースト */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--pine);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 8px 18px;
+  opacity: 0;
+  transition: opacity .2s ease, transform .2s ease;
+  pointer-events: none;
+  z-index: 200;
+}
+.toast.show { opacity: 1; transform: translateX(-50%); }
+
+
 /* ---------- 結果画面：相性 ---------- */
 .match { padding: 13px 0; border-bottom: 1px solid var(--line); }
 .match:last-child { padding-bottom: 0; border-bottom: none; }
@@ -1586,53 +1761,6 @@ body {
 .site-foot svg { width: 13px; height: 13px; display: block; }
 
 
-/* =========================================================
-   結果画面に固定するシェアのバー
-   ========================================================= */
-.share-bar {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 0;
-  width: 100%;
-  max-width: 480px;
-  z-index: 40;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 11px calc(5px + env(safe-area-inset-bottom));
-  background: var(--birch);
-  box-shadow: 0 -2px 14px rgba(30, 58, 49, .12);
-  border-radius: 16px 16px 0 0;
-}
-.share-lf {
-  flex: 1;
-  min-width: 0;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  font-size: 9px;
-  color: var(--stone);
-}
-.share-rt { white-space: nowrap; font-size: 9.5px; font-weight: 700; margin-right: 2px; }
-.share-ic {
-  flex-shrink: 0;
-  width: 23px;
-  height: 23px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-}
-.share-ic svg { width: 13px; height: 13px; display: block; }
-.share-ic.sx { background: #14171A; }
-.share-ic.sl { background: #06C755; }
-.share-ic:hover { filter: brightness(1.15); }
-.share-ic:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
-
-/* バーの高さぶん、下に余白を作る */
-#screen-result { padding-bottom: 52px; }
 @media (max-width: 380px) {
   .share-lf { font-size: 8.5px; }
 }
