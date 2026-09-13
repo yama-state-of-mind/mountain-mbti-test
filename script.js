@@ -137,9 +137,10 @@ function renderCluster() {
     const delay = (i * 0.07).toFixed(2);
     const cycle = (4.0 + (i % 5) * 0.34).toFixed(2);
     return `
-      <g class="cl-char" style="--r:${it.rot}deg;--fd:${cycle}s;animation-delay:${delay}s,${delay}s"
-         transform="translate(${it.x - half} ${it.y - half})">
-        <g transform="rotate(${it.rot} ${half} ${half}) scale(${it.size / 160})">${inner}</g>
+      <g transform="translate(${it.x - half} ${it.y - half})">
+        <g class="cl-char" style="--fd:${cycle}s;animation-delay:${delay}s,${delay}s">
+          <g transform="rotate(${it.rot} ${half} ${half}) scale(${it.size / 160})">${inner}</g>
+        </g>
       </g>`;
   }).join("");
 

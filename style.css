@@ -777,7 +777,10 @@ body {
 .cluster-wrap { margin: 0 -4px 2px; }
 .cluster-wrap svg { display: block; width: 100%; height: auto; }
 
-/* キャラクター1体ぶんの浮遊アニメーション */
+/* キャラクター1体ぶんの浮遊アニメーション。
+   位置（translate）は親のgに固定でつけてあるので、ここでは動きだけを扱う。
+   ※ CSSのtransformはSVGのtransform属性を丸ごと上書きしてしまうため、
+     位置指定用のgとアニメーション用のgは必ず分けること */
 .cl-char {
   transform-origin: center bottom;
   opacity: 0;
@@ -787,12 +790,12 @@ body {
   animation-delay: var(--d, 0s), calc(var(--d, 0s) + .5s);
 }
 @keyframes clusterIn {
-  from { opacity: 0; transform: translateY(10px) scale(.9) rotate(var(--r, 0deg)); }
-  to   { opacity: 1; transform: none rotate(var(--r, 0deg)); }
+  from { opacity: 0; transform: translateY(10px) scale(.9); }
+  to   { opacity: 1; transform: none; }
 }
 @keyframes clusterFloat {
-  0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
-  50%      { transform: translateY(-4px) rotate(var(--r, 0deg)); }
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
 }
 
 /* トップの一言。ボタン風にせず、控えめな見出しとして */
