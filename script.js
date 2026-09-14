@@ -87,18 +87,19 @@ function renderCluster() {
   const box = document.getElementById("cluster-wrap");
   if (!box || typeof characterSVG !== "function") return;
 
+  // 山の輪郭を横幅ぎりぎりまで広げ、キャラクターも一回り大きく育つようにしてある
   const VB_W = 480, VB_H = 320;
-  const APEX = { x: 240, y: 34 };
-  const BASE_L = { x: 70, y: 288 };
-  const BASE_R = { x: 410, y: 288 };
+  const APEX = { x: 240, y: 30 };
+  const BASE_L = { x: 16, y: 290 };
+  const BASE_R = { x: 464, y: 290 };
 
   const leftX = (t) => APEX.x + t * (BASE_L.x - APEX.x);
   const rightX = (t) => APEX.x + t * (BASE_R.x - APEX.x);
   const rowY = (t) => APEX.y + t * (BASE_L.y - APEX.y);
 
   // 段ごとの高さ(t)と、その段に置く数。サイズは麓に近いほど大きく育つ
-  const ROWS = [[0.22, 1], [0.42, 3], [0.62, 4], [0.82, 4]];
-  const sizeAt = (t) => 36 + 28 * t;
+  const ROWS = [[0.20, 1], [0.40, 3], [0.62, 4], [0.86, 4]];
+  const sizeAt = (t) => 42 + 38 * t;
 
   const shuffled = Object.keys(TYPES);
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -111,7 +112,7 @@ function renderCluster() {
   let idx = 0;
   ROWS.forEach(([t, count]) => {
     const lx = leftX(t), rx = rightX(t);
-    const inset = (rx - lx) * 0.10;
+    const inset = (rx - lx) * 0.08;
     const lx2 = lx + inset, rx2 = rx - inset;
     for (let i = 0; i < count; i++) {
       const code = codes[idx++];
@@ -125,16 +126,36 @@ function renderCluster() {
   });
   items.sort((a, b) => a.z - b.z);
 
+  // 背後にうっすら見える山（左端から右端まで連なり、右は少しだけ画面外に覗く）
+  const backMountain = `
+    <path d="M0 ${VB_H*0.62}
+             L${VB_W*0.18} ${VB_H*0.38}
+             L${VB_W*0.34} ${VB_H*0.58}
+             L${VB_W*0.50} ${VB_H*0.30}
+             L${VB_W*0.68} ${VB_H*0.50}
+             L${VB_W*0.84} ${VB_H*0.28}
+             L${VB_W*1.06} ${VB_H*0.34}
+             L${VB_W*1.06} ${VB_H}
+             L0 ${VB_H} Z"
+          fill="var(--stone)" opacity=".28"/>`;
+
+  // 山頂の雪冠：山の輪郭そのものの座標（leftX/rightX）から求めるので、
+  // 山の幅を変えても、常に輪郭にぴったり沿った形になる
+  const snowEdge = 0.16;   // 雪線の高さ（山頂からの割合）
+  const snowNotch = 0.10;  // 中央だけ少し高くして、雪線をギザギザにする
+  const snow = `
+    <path d="M${APEX.x} ${APEX.y}
+             L${rightX(snowEdge)} ${rowY(snowEdge)}
+             L${APEX.x} ${rowY(snowNotch)}
+             L${leftX(snowEdge)} ${rowY(snowEdge)} Z"
+          fill="var(--sun)" opacity=".92"/>`;
+
   const mountain = `
-    <path d="M${BASE_L.x - 60} ${BASE_L.y + 18} L${BASE_L.x - 6} ${BASE_L.y - 52} L${BASE_L.x + 58} ${BASE_L.y - 4}
-             L${APEX.x - 36} ${APEX.y + 90} L${APEX.x + 30} ${APEX.y + 168} L${APEX.x + 100} ${APEX.y + 128}
-             L${BASE_R.x + 8} ${BASE_R.y - 26} L${BASE_R.x + 8} ${VB_H} L${BASE_L.x - 60} ${VB_H} Z"
-          fill="var(--pine)" opacity=".12"/>
+    ${backMountain}
     <path d="M${APEX.x} ${APEX.y} L${BASE_R.x} ${BASE_R.y} L${BASE_L.x} ${BASE_L.y} Z"
           fill="var(--pine)" opacity=".9"/>
-    <path d="M${APEX.x} ${APEX.y} L${APEX.x + 28} ${APEX.y + 38} L${APEX.x - 3} ${APEX.y + 28}
-             L${APEX.x - 28} ${APEX.y + 38} Z" fill="var(--sun)" opacity=".92"/>
-    <circle cx="${APEX.x}" cy="${APEX.y + 4}" r="72" fill="var(--sun)" opacity=".08"/>`;
+    ${snow}
+    <circle cx="${APEX.x}" cy="${APEX.y + 4}" r="92" fill="var(--sun)" opacity=".08"/>`;
 
   const sparkles = [[-100,10],[130,6],[-160,90],[150,80],[0,-18],[-90,130],[80,120]]
     .map(([dx, dy], i) => `
@@ -536,17 +557,27 @@ function showResult() {
     })
     .join("");
 
-  /* ---------- シェア用の文言 ---------- */
+  /* ---------- シェア用の文言 ----------
+     X：結果＋診断への案内だけの短い形
+     LINE：結果＋一言の布教文＋診断への案内（友だち1人への会話を想定した長め） */
   const shareAnimal = secret ? secret.animal : (ch ? ch.animal : type.name);
   const shareType = secret ? secret.typeName : type.name;
   const shareCopy = secret ? secret.copy : type.copy;
   const head = secret ? "【シークレット】" : "";
-  const text =
-    `${head}私の登山タイプは【${shareAnimal}｜${shareType}】でした！\n` +
-    `「${shareCopy}」\n${SHARE_HASHTAG}`;
 
   // 共有先は、そのタイプの紹介ページ（診断していない人が開いても意味が通る）
   const shareUrl = `${SITE_URL}/types.html?g=${code.slice(0, 2)}#${code}`;
+
+  const resultLine = `${head}私の登山タイプは【${shareAnimal}｜${shareType}】でした！\n${shareUrl}`;
+  const ctaBlock = `▼診断はこちら\n${SITE_URL}/\n${SHARE_HASHTAG}`;
+
+  const textX = `${resultLine}\n\n${ctaBlock}`;
+  const textLine =
+    `${resultLine}\n\n` +
+    `13の質問に答えるだけ。\nあなたの登山スタイルが、16タイプの動物で分かります。\n\n` +
+    ctaBlock;
+  // 互換用（他の場所でtextを参照している箇所向け。中身はXと同じ短い形にしておく）
+  const text = textX;
 
   // 大きなシェアボタン。背景は生息エリアのdeep色に連動させる。押すとモーダルが開く
   const cta = $("#btn-cta");
@@ -559,7 +590,7 @@ function showResult() {
 
   // シェア用モーダルの中身も、この結果に合わせて用意しておく
   fillShareModal({ code, g, secret, detail, animal: shareAnimal, typeName: shareType,
-                   copy: shareCopy, text, shareUrl });
+                   copy: shareCopy, text, textX, textLine, shareUrl });
 
   track("diagnosis_complete", {
     type_code: code,
@@ -837,12 +868,17 @@ function fillShareModal(d) {
   const pv = $("#smodal-pv");
   if (!pv) return;
   pv.innerHTML = shareImageSVG(d);
+
+  // X：文章にURLを書き込み済みなので、textだけを渡す（urlを別で足すと二重に付くため）
   $("#sm-x").href =
-    "https://twitter.com/intent/tweet?text=" +
-    encodeURIComponent(d.text) + "&url=" + encodeURIComponent(d.shareUrl);
+    "https://twitter.com/intent/tweet?text=" + encodeURIComponent(d.textX);
+
+  // LINE：lineit/share の text は一部環境（iPhone Safariなど）で無視され、
+  // urlだけが送られてしまう既知の不具合があるため、公式のテキスト共有スキームを使う。
+  // こちらは常に指定した文章がそのまま送られる
   $("#sm-line").href =
-    "https://social-plugins.line.me/lineit/share?url=" +
-    encodeURIComponent(d.shareUrl) + "&text=" + encodeURIComponent(d.text);
+    "https://line.me/R/msg/text/?" + encodeURIComponent(d.textLine);
+
   $("#sm-copy").dataset.url = d.shareUrl;
 }
 
