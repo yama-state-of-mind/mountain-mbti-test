@@ -457,6 +457,16 @@ function findSecret(code) {
 /* ---------- 結果表示 ---------- */
 /* ---------- 計測（Google Analytics） ----------
    gtag が読み込めていない環境でも落ちないようにする */
+/* GA4で「どのボタンから来たか」が分かるよう、チャネルごとにUTMを付ける。
+   utm_source: x / line / copy_link など　utm_medium: social　utm_campaign: 用途 */
+function withUtm(url, source, campaign) {
+  const u = new URL(url);
+  u.searchParams.set("utm_source", source);
+  u.searchParams.set("utm_medium", "social");
+  u.searchParams.set("utm_campaign", campaign);
+  return u.toString();
+}
+
 function track(name, params) {
   if (typeof gtag === "function") gtag("event", name, params || {});
 }
@@ -568,14 +578,23 @@ function showResult() {
   // 共有先は、そのタイプの紹介ページ（診断していない人が開いても意味が通る）
   const shareUrl = `${SITE_URL}/types.html?g=${code.slice(0, 2)}#${code}`;
 
-  const resultLine = `${head}私の登山タイプは【${shareAnimal}｜${shareType}】でした！\n${shareUrl}`;
-  const ctaBlock = `▼診断はこちら\n${SITE_URL}/\n${SHARE_HASHTAG}`;
+  function buildShareTexts(source) {
+    const resultUrl = withUtm(shareUrl, source, "share_result");
+    const ctaUrl = withUtm(`${SITE_URL}/`, source, "share_cta");
+    const resultLine = `${head}私の登山タイプは【${shareAnimal}｜${shareType}】でした！\n${resultUrl}`;
+    const ctaBlock = `▼診断はこちら\n${ctaUrl}\n${SHARE_HASHTAG}`;
+    return { resultLine, ctaBlock };
+  }
 
-  const textX = `${resultLine}\n\n${ctaBlock}`;
+  const xParts = buildShareTexts("x");
+  const textX = `${xParts.resultLine}\n\n${xParts.ctaBlock}`;
+
+  const lineParts = buildShareTexts("line");
   const textLine =
-    `${resultLine}\n\n` +
+    `${lineParts.resultLine}\n\n` +
     `13の質問に答えるだけ。\nあなたの登山スタイルが、16タイプの動物で分かります。\n\n` +
-    ctaBlock;
+    lineParts.ctaBlock;
+
   // 互換用（他の場所でtextを参照している箇所向け。中身はXと同じ短い形にしておく）
   const text = textX;
 
@@ -879,7 +898,7 @@ function fillShareModal(d) {
   $("#sm-line").href =
     "https://line.me/R/msg/text/?" + encodeURIComponent(d.textLine);
 
-  $("#sm-copy").dataset.url = d.shareUrl;
+  $("#sm-copy").dataset.url = withUtm(d.shareUrl, "copy_link", "share_result");
 }
 
 /* 開閉 */
